@@ -1,0 +1,5 @@
+Aging Error: column "bucket" does not exist
+error: column "bucket" does not exist
+    at C:\Users\User\Documents\GitHub\AntiGravExer1\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async exports.getAgingReport (C:\Users\User\Documents\GitHub\AntiGravExer1\src\controllers\reportController.js:33:22)

@@ -1,0 +1,1434 @@
+/* client/styles.css */
+/* Modern "Green & White" Theme */
+
+:root {
+  --font-primary: 'Inter', sans-serif;
+
+  /* Backgrounds */
+  --color-bg: #ecfdf5;
+  /* Very light emerald/mint */
+  --color-sidebar: #064e3b;
+  /* Deep lush green */
+  --color-surface: #f0fdf4;
+  /* Very light green cards */
+
+  /* Primary Actions */
+  --color-primary: #10b981;
+  /* Emerald 500 */
+  --color-primary-hover: #059669;
+  /* Emerald 600 */
+  --color-secondary: #34d399;
+  /* Emerald 400 */
+
+  /* Status Colors */
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+
+  /* Text */
+  --color-text: #000000;
+  /* Black for maximum contrast */
+  --color-text-light: #f1f5f9;
+  /* Light text for sidebar */
+  --color-text-muted: #64748b;
+  /* Slate 500 */
+
+  /* Borders */
+  --color-border: #e2e8f0;
+  /* Light grey border */
+
+  /* Layout */
+  --header-height: 70px;
+  --sidebar-width: 260px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-primary);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+  height: 100vh;
+  overflow: hidden;
+  /* Prevent body scroll, let main scroll */
+  display: flex;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--color-sidebar);
+  background: linear-gradient(180deg, #065f46 0%, #064e3b 100%);
+  border-right: none;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  transition: transform 0.3s ease;
+  z-index: 50;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
+}
+
+.brand {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ecfdf5;
+  /* Very light green white */
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.brand span {
+  color: #34d399;
+  /* Bright emerald accent */
+}
+
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.nav-item {
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #a7f3d0;
+  /* Muted light green */
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.nav-item.active {
+  background: #10b981;
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.nav-item button {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.sidebar-footer {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #34d399;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #064e3b;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: #a7f3d0;
+}
+
+.logout-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(255, 100, 100, 0.5);
+  color: #fca5a5;
+  padding: 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: white;
+  border-color: #ef4444;
+}
+
+/* --- Main Content --- */
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Header */
+header.top-bar {
+  height: var(--header-height);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  z-index: 40;
+}
+
+.page-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* Scrollable Content Area */
+main#mainContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+  scroll-behavior: smooth;
+}
+
+/* --- Dashboard Stats --- */
+/* --- Dashboard Stats --- */
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--color-surface);
+  /* Enhanced 3D Effect with multiple shadows */
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.1);
+  /* Bottom lip */
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  /* The left border color is now dynamic per card type, but we can set a default here or leave it to specific classes */
+  border-left: 6px solid var(--color-primary);
+  /* Thicker for visibility */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--color-primary);
+}
+
+.stat-card.success::before {
+  background: var(--color-success);
+}
+
+.stat-card.danger::before {
+  background: var(--color-danger);
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-text);
+  /* Dark text */
+}
+
+/* --- Filters & Toolbar --- */
+.filters-container {
+  background: linear-gradient(to right, #ecfdf5, #d1fae5);
+  /* Green gradient */
+  border: 1px solid #10b981;
+  /* Green border */
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  /* 3D Card Effect */
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+  /* Bottom lip */
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.filters-container:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.date-range-container {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  background: #ffffff;
+  /* White bg for contrast inside green container */
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #34d399;
+  /* Green border */
+  border-radius: 8px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+
+.date-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.date-label {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.date-input {
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  font-size: 0.9rem;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+}
+
+/* Customizing calendar picker indicator if possible (browser dependent) */
+.date-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.4);
+  /* Make it dark gray */
+  cursor: pointer;
+}
+
+.filters-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.filters-group select,
+.filters-group input {
+  padding: 0.6rem 2.5rem 0.6rem 1rem;
+  /* Extra right padding for chevron */
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background-color: #f8fafc;
+  color: var(--color-text);
+  font-size: 0.9rem;
+  outline: none;
+  min-width: 140px;
+  appearance: none;
+  /* Dark SVG chevron for light mode */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  background-size: 1rem;
+}
+
+/* Specific override for the search bar */
+.search-input {
+  min-width: 280px !important;
+  border-radius: 2rem !important;
+  /* Pill shape */
+  border: 1px solid #10b981 !important;
+  /* Green border matching theme */
+  background-color: #ecfdf5 !important;
+  /* Light mint background */
+  background-image: none !important;
+  /* No arrow icon */
+  padding: 0.8rem 1.5rem !important;
+  /* Increased padding */
+  color: #064e3b !important;
+  /* Dark green text */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  /* Slight inset depth */
+  transition: all 0.2s;
+}
+
+.search-input:focus {
+  background-color: #fff !important;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2) !important;
+  /* Green glow focus */
+}
+
+.filters-group select:focus,
+.filters-group input:focus {
+  border-color: var(--color-primary);
+  background-color: #fff;
+  outline: none;
+}
+
+.filters-group select option {
+  background-color: #fff;
+  color: var(--color-text);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+/* --- Grid / Tables (3D Effect) --- */
+.table-container {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow-x: auto;
+  margin-bottom: 2rem;
+  /* Strong 3D Shadow */
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    3px 3px 0px rgba(0, 0, 0, 0.1);
+  transform: translateZ(0);
+  /* Hardware accelerate */
+}
+
+table.grid {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+table.grid th,
+table.grid td {
+  padding: 1rem 1.2rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+table.grid th {
+  background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+  /* Gradient for 3D curve */
+  position: sticky;
+  top: 0;
+  color: var(--color-text);
+  /* Black text */
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 10;
+
+  /* 3D Header Border & Shadow */
+  border-bottom: 2px solid #cbd5e1;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+table.grid tr:last-child td {
+  border-bottom: none;
+}
+
+table.grid tbody tr {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+table.grid tbody tr:hover {
+  background: #f0fdf4;
+  transform: translateY(-2px) scale(1.005);
+  /* "Pop" effect */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  /* Floating shadow */
+  z-index: 5;
+  position: relative;
+}
+
+table.grid td {
+  font-size: 0.9rem;
+  color: var(--color-text);
+  border-right: 1px solid rgba(0, 0, 0, 0.03);
+  /* Subtle vertical divider */
+}
+
+.editable {
+  cursor: pointer;
+  border-bottom: 1px dashed var(--color-primary);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.editable:hover {
+  background: #ecfdf5;
+  /* Light green bg on hover */
+}
+
+/* Badges */
+.badge {
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.badge.normal {
+  background: #eff6ff;
+  color: #3b82f6;
+  border: 1px solid #bfdbfe;
+}
+
+.badge.paid {
+  background: #ecfdf5;
+  color: #10b981;
+  border: 1px solid #a7f3d0;
+}
+
+.badge.overdue {
+  background: #fef2f2;
+  color: #ef4444;
+  border: 1px solid #fecaca;
+}
+
+/* --- Modals --- */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  /* Dimmer background */
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.3s;
+}
+
+.modal.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.modal-content {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 1rem;
+}
+
+.modal-header h3 {
+  font-size: 1.25rem;
+  color: var(--color-text);
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: var(--color-danger);
+}
+
+.login-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.login-form input,
+.login-form select {
+  width: 100%;
+  padding: 0.7rem;
+  background: #f8fafc;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+}
+
+.login-form input:focus {
+  border-color: var(--color-primary);
+  background: #fff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* History & Action Buttons */
+.history-btn {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-right: 4px;
+}
+
+.history-btn:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+/* Utility */
+.hidden {
+  display: none !important;
+}
+
+.card {
+  background: var(--color-surface);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.text-right {
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    height: 100%;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .main-wrapper {
+    margin-left: 0;
+  }
+
+  .top-bar {
+    padding: 0 1rem;
+  }
+}
+
+/* Printing logic override */
+@media print {
+
+  .sidebar,
+  .top-bar,
+  .filters-container,
+  .btn-primary {
+    display: none !important;
+  }
+
+  .main-wrapper {
+    height: auto;
+    overflow: visible;
+    display: block;
+  }
+
+  main {
+    overflow: visible;
+    padding: 0;
+    display: block;
+  }
+
+  body {
+    background: white;
+    color: black;
+    display: block;
+  }
+
+  .card,
+  .table-container {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+  }
+}
+
+/* --- Login Page Specifics --- */
+body.login-page {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 1rem;
+}
+
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-container-split {
+  display: flex;
+  flex-direction: row;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  width: auto;
+  /* Allow auto sizing */
+  max-width: 90%;
+  /* Prevent hitting edge */
+  overflow: hidden;
+  animation: fadeInUp 0.5s ease-out;
+  /* Removed min-height to eliminate excess whitespace */
+}
+
+.login-visual-side {
+  flex: 0 0 auto;
+  /* Size based on content (image) */
+  background-color: #065f46;
+  /* Dark Green to blend */
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.login-visual-side img.visual-image {
+  width: auto;
+  height: auto;
+  max-width: 50vw;
+  /* Limit max width */
+  max-height: 600px;
+  /* Limit height to reasonable card size */
+  object-fit: contain;
+  display: block;
+}
+
+/* Removed old visual overlay styles */
+
+.login-form-side {
+  flex: 1;
+  min-width: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  background: #d1fae5;
+  /* Green background */
+  padding: 1.5rem;
+  /* Reduced padding from 2rem */
+}
+
+/* Compact header to save vertical space */
+.login-header-new {
+  margin-bottom: 1rem !important;
+}
+
+.login-header-new div {
+  font-size: 2.5rem !important;
+  /* Smaller icon */
+  margin-bottom: 0.25rem !important;
+}
+
+.login-header-new h2 {
+  font-size: 1.25rem !important;
+  /* Slightly smaller title */
+}
+
+.login-form-side>form {
+  padding: 0 1rem !important;
+  /* Reduce inner form padding */
+}
+
+.login-form-side .input-group {
+  margin-bottom: 0.85rem;
+  /* Tighter spacing */
+}
+
+/* On mobile, hide the visual side and act like a card */
+@media (max-width: 768px) {
+  .login-container-split {
+    flex-direction: column;
+    max-width: 420px;
+  }
+
+  .login-visual-side {
+    display: none;
+  }
+}
+
+.login-header {
+  background: #059669;
+  padding: 3rem 2.5rem 2rem;
+  margin-bottom: 0;
+}
+
+.login-form-side>form {
+  padding: 2rem 2.5rem 0.5rem;
+  flex: 1;
+  /* Pushes footer down if needed */
+}
+
+.login-form-side>div {
+  padding: 0 2.5rem 2rem;
+}
+
+.logo-container {
+  margin: 0 auto 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.login-logo {
+  max-width: 100px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.login-header h1 {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+}
+
+.login-header p {
+  color: #ecfdf5;
+  /* Lighter green for subtitle */
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 1.25rem;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--color-sidebar);
+  /* Dark green label */
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper .input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-style: normal;
+  font-size: 1.2rem;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 0.85rem 1rem 0.85rem 2.8rem;
+  border: 1px solid #94a3b8;
+  /* More visible border */
+  border-radius: 8px;
+  background: var(--color-surface);
+  /* Mint background */
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  color: var(--color-sidebar);
+}
+
+.input-wrapper input::placeholder {
+  color: #94a3b8;
+}
+
+.input-wrapper input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+  background: white;
+  outline: none;
+}
+
+.input-wrapper input:focus+i {
+  color: var(--color-primary);
+}
+
+.btn-login {
+  width: 100%;
+  background: var(--color-primary);
+  color: white;
+  padding: 0.9rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+}
+
+.btn-login:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.4);
+}
+
+.btn-login:active {
+  transform: translateY(0);
+}
+
+/* Custom Input Theme for Payment Form */
+.input-theme {
+  width: 100%;
+  padding: 0.8rem;
+  background: var(--color-surface);
+  border: 1px solid #d1fae5;
+  border-radius: 6px;
+  color: var(--color-sidebar);
+  /* Dark green text */
+  font-family: var(--font-primary);
+  font-size: 1rem;
+  font-weight: 500;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.input-theme:focus {
+  background: #ffffff;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+}
+
+/* --- 3D Payment Interface (Custom Override) --- */
+#paymentInputSection .card {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 1px solid #a7f3d0;
+  border-radius: 20px;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  padding: 3rem;
+  max-width: 650px !important;
+}
+
+#paymentInputSection h3 {
+  color: #064e3b;
+  font-size: 1.75rem;
+  font-weight: 800;
+  text-shadow: 2px 2px 0px rgba(164, 240, 200, 0.4);
+  margin-bottom: 2rem !important;
+  text-align: center;
+}
+
+/* Neumorphic/3D Input Fields */
+#paymentInputSection input.input-theme,
+#paymentInputSection input[type="text"],
+#paymentInputSection input[type="date"],
+#paymentInputSection input[type="number"] {
+  background: #f0fdf4;
+  border: 2px solid #bbf7d0;
+  border-radius: 12px;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.06),
+    0 1px 2px rgba(255, 255, 255, 0.8);
+  font-size: 1.1rem;
+  padding: 1rem;
+  color: #065f46;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+#paymentInputSection input:focus {
+  background: #ffffff;
+  border-color: #10b981;
+  box-shadow:
+    0 0 0 4px rgba(16, 185, 129, 0.2),
+    inset 0 1px 2px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+/* 3D Action Buttons */
+#paymentInputSection .btn-primary {
+  background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+  border: none;
+  box-shadow: 0 5px 0 #047857;
+  /* The "3D" bottom lip */
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: white;
+  transition: all 0.1s;
+  margin-top: 5px;
+  /* specific alignment */
+}
+
+#paymentInputSection .btn-primary:active {
+  transform: translateY(5px);
+  /* Push down effect */
+  box-shadow: 0 0 0 #047857;
+  /* Remove lip */
+}
+
+#paymentInputSection .btn-primary:hover {
+  filter: brightness(110%);
+}
+
+#paymentFindBtn {
+  height: 100%;
+  margin-top: 0 !important;
+  /* Fix alignment with input */
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+}
+
+/* Result Card "Ticket" Style */
+#paymentSearchResult {
+  background: white !important;
+  border: 2px dashed #34d399 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+  position: relative;
+  overflow: hidden;
+  margin-top: 2rem;
+}
+
+#paymentSearchResult::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: repeating-linear-gradient(45deg, #34d399, #34d399 10px, white 10px, white 20px);
+}
+
+#paymentSearchResult h4 {
+  color: #059669 !important;
+  font-size: 0.9rem !important;
+  letter-spacing: 1px;
+}
+
+/* Typography Enhancements */
+#paymentSearchResult strong {
+  color: #064e3b;
+}
+
+#paymentSearchResult span {
+  font-weight: 500;
+  color: #047857;
+}
+
+#paymentSearchResult #payClientBalance {
+  color: #ef4444;
+  /* Keep balance red for importance */
+  font-size: 1.1em;
+  font-weight: 800;
+}
+
+/* --- 3D Collection Sheet Section (Custom Override) --- */
+#collectionSheetSection .card {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 1px solid #10b981;
+  /* Stronger border as requested */
+  border-radius: 20px;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  padding: 3rem;
+  max-width: 1000px;
+  /* Wider for buttons */
+}
+
+#collectionSheetSection h3 {
+  color: #064e3b;
+  font-size: 1.75rem;
+  font-weight: 800;
+  text-shadow: 2px 2px 0px rgba(164, 240, 200, 0.4);
+  margin-bottom: 2rem !important;
+}
+
+#collectionSheetSection p {
+  font-weight: 500;
+  color: #065f46;
+}
+
+/* 3D Buttons for Collectors */
+#collectionSheetButtons .btn-primary {
+  background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+  border: none;
+  box-shadow: 0 5px 0 #047857;
+  /* 3D Bottom Lip */
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: white;
+  transition: all 0.1s;
+  letter-spacing: 0.5px;
+  /* Overwrite inline padding if needed via specific selector or ensure simple class matches */
+}
+
+#collectionSheetButtons .btn-primary:active {
+  transform: translateY(5px);
+  box-shadow: 0 0 0 #047857;
+}
+
+#collectionSheetButtons .btn-primary:hover {
+  filter: brightness(110%);
+}
+
+/* --- 3D Monthly Report Section (Custom Override) --- */
+#monthlyReportSection .card {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 1px solid #10b981;
+  border-radius: 20px;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  overflow: visible;
+  /* Ensure shadows don't clip */
+}
+
+/* Header & Actions */
+#monthlyReportSection .modal-header {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+#monthlyReportSection h3 {
+  color: #064e3b;
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-shadow: 1px 1px 0px rgba(164, 240, 200, 0.4);
+}
+
+/* 3D Buttons in Report Header */
+#monthlyReportSection .btn-primary {
+  background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+  border: none;
+  box-shadow: 0 4px 0 #047857;
+  border-radius: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  padding: 0.6rem 1.2rem;
+  transition: all 0.1s;
+  color: white;
+}
+
+#monthlyReportSection .btn-primary:active,
+#monthlyReportSection .btn-primary.active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 #047857;
+}
+
+#monthlyReportSection .btn-primary:hover {
+  filter: brightness(110%);
+}
+
+#monthlyReportSection #btnCollection {
+  background: linear-gradient(180deg, #64748b 0%, #475569 100%);
+  box-shadow: 0 4px 0 #334155;
+}
+
+#monthlyReportSection #btnCollection.active {
+  background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+  box-shadow: 0 0 0 #047857;
+}
+
+/* 3D Table Container */
+#monthlyReportSection .table-container {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+  /* Inset shadow for depth */
+  border: 1px solid #a7f3d0;
+  overflow: hidden;
+}
+
+/* Table Headers with Green Theme */
+#monthlyReportSection table.grid th {
+  background: linear-gradient(180deg, #065f46 0%, #064e3b 100%);
+  color: #ecfdf5;
+  /* Light mint text */
+  border-bottom: 2px solid #047857;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Sub-header row fix */
+#monthlyReportSection table.grid tr:nth-child(2) th {
+  background: #064e3b;
+  /* Solid dark for second row */
+  font-size: 0.8rem;
+  color: #a7f3d0;
+  /* Muted green text */
+  border-bottom: 1px solid #047857;
+}
+
+/* Table Body Rows */
+#monthlyReportSection table.grid tbody tr:nth-child(even) {
+  background-color: #f0fdf4;
+  /* Very light mint stripe */
+}
+
+#monthlyReportSection table.grid tbody tr:hover {
+  background-color: #d1fae5 !important;
+  transform: scale(1.002);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+  position: relative;
+}
+
+#monthlyReportSection table.grid td {
+  border-right: 1px solid rgba(16, 185, 129, 0.1);
+  color: #064e3b;
+  font-weight: 500;
+}
+
+/* Grand Total Row */
+#monthlyReportSection table.grid tbody tr:last-child {
+  background: #065f46 !important;
+  color: white !important;
+}
+
+#monthlyReportSection table.grid tbody tr:last-child td {
+  color: white !important;
+  font-weight: 800;
+  border-top: 2px solid #34d399;
+}
+
+/* --- Action Section Separation --- */
+.actions-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: flex-start;
+  /* Align search and buttons to left */
+  background: var(--color-surface);
+  padding: 1.2rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  margin-bottom: 2rem;
+  /* Distinct separation from table */
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.actions-toolbar .search-input {
+  /* Ensure search input looks good in this container */
+  margin-right: auto;
+  /* Push buttons to the right if desired, or keep generic */
+}
+
+/* --- Themed Modal Styles (Client Profile) --- */
+.modal-header-green {
+  background: linear-gradient(180deg, #065f46 0%, #064e3b 100%);
+  color: white;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
+
+.modal-header-green h3 {
+  color: white !important;
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.modal-header-green .close-btn {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.modal-header-green .close-btn:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.modal-footer-green {
+  background: linear-gradient(180deg, #065f46 0%, #064e3b 100%);
+  padding: 1.5rem 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  z-index: 10;
+}
+
+/* Button override for the green footer */
+.modal-footer-green .btn-primary {
+  background: white;
+  color: #064e3b;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.modal-footer-green .btn-primary:hover {
+  background: #f0fdf4;
+  transform: translateY(-1px);
+}

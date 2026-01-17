@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Melann Lending – Login</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body class="login-page">
+    <div class="login-container-split">
+        <div class="login-visual-side">
+            <!-- Left Side: Logo Only, centered, no overlay -->
+            <img src="logo.jpg" alt="Melann Lending Logo" class="visual-image">
+        </div>
+
+        <div class="login-form-side">
+            <!-- Right Side: Monitoring Title & Icon -->
+            <div class="login-header-new" style="margin-bottom: 1.5rem;">
+                <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">📊</div>
+                <h2 style="color: #064e3b; font-size: 1.5rem; font-weight: 700;">Past Due & Reports<br>Monitoring</h2>
+            </div>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required />
+                        <span class="input-icon">👤</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Enter your password"
+                            required />
+                        <span class="input-icon">🔒</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    Sign In 🚀
+                </button>
+            </form>
+
+            <form id="registerForm" class="hidden">
+                <div class="input-group">
+                    <label for="reg_fullname">Full Name</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="reg_fullname" name="full_name" placeholder="Full Name" required />
+                        <span class="input-icon">📝</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="reg_username">Username</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="reg_username" name="username" placeholder="Choose a username" required />
+                        <span class="input-icon">👤</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="reg_password">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="reg_password" name="password" placeholder="Create a password"
+                            required />
+                        <span class="input-icon">🔑</span>
+                    </div>
+                </div>
+
+                <!-- Optional Role Selection, default to collector if hidden -->
+                <div class="input-group">
+                    <label for="reg_role">Role</label>
+                    <div class="input-wrapper">
+                        <select id="reg_role" name="role"
+                            style="width:100%; padding:0.85rem 1rem 0.85rem 2.8rem; border:1px solid #d1fae5; border-radius:8px; background:var(--color-surface); color:var(--color-sidebar);">
+                            <option value="collector">Collector</option>
+                            <option value="supervisor">Supervisor</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <span class="input-icon">🏷️</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login" style="background:var(--color-secondary);">
+                    Create Account ✨
+                </button>
+            </form>
+
+            <div style="margin-top: 1.5rem; font-size: 0.9rem; color: #64748b;">
+                <p id="toggleText">Don't have an account? <a href="#" id="toggleFormBtn"
+                        style="color:var(--color-primary); font-weight:600; text-decoration:none;">Sign Up</a></p>
+            </div>
+
+            <div id="loginMessage" class="message" style="margin-top:1rem;"></div>
+        </div>
+    </div>
+    <script src="login.js"></script>
+</body>
+
+</html>

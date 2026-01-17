@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Melann Lending Past Due Monitoring</title>
+  <link rel="stylesheet" href="styles.css?v=6" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="logo.jpg" alt="Melann Logo" class="brand-logo" />
+      <span>Melann Lending Past Due Monitoring</span>
+    </div>
+
+    <ul class="nav-links">
+      <li class="nav-item">
+        <button id="viewDashboard">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="margin-right:8px">
+            <rect x="3" y="3" width="7" height="7" rx="1" fill="#8b5cf6" />
+            <rect x="14" y="3" width="7" height="7" rx="1" fill="#ec4899" />
+            <rect x="14" y="14" width="7" height="7" rx="1" fill="#3b82f6" />
+            <rect x="3" y="14" width="7" height="7" rx="1" fill="#10b981" />
+          </svg> Dashboard
+        </button>
+      </li>
+
+      <li class="nav-item active">
+        <button id="viewGrid">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="margin-right:8px">
+            <rect x="3" y="4" width="18" height="16" rx="2" fill="#3B82F6" />
+            <path d="M7 8H17" stroke="white" stroke-width="2" stroke-linecap="round" />
+            <path d="M7 12H17" stroke="white" stroke-width="2" stroke-linecap="round" />
+            <path d="M7 16H13" stroke="white" stroke-width="2" stroke-linecap="round" />
+          </svg> Loan Records
+        </button>
+      </li>
+      <li class="nav-item">
+        <button id="viewReports">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="margin-right:8px">
+            <path d="M18 20V10" stroke="#F59E0B" stroke-width="4" stroke-linecap="round" />
+            <path d="M12 20V4" stroke="#10B981" stroke-width="4" stroke-linecap="round" />
+            <path d="M6 20V14" stroke="#EF4444" stroke-width="4" stroke-linecap="round" />
+          </svg> Performance & Aging
+        </button>
+      </li>
+      <li class="nav-item">
+        <button id="viewCollectionSheet">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="margin-right:8px">
+            <path
+              d="M16 2H8C7.44772 2 7 2.44772 7 3V21C7 21.5523 7.44772 22 8 22H16C16.5523 22 17 21.5523 17 21V3C17 2.44772 16.5523 2 16 2Z"
+              fill="#F97316" />
+            <rect x="9" y="5" width="6" height="14" fill="white" rx="1" />
+            <path d="M10 8H14" stroke="#CBD5E1" stroke-width="1.5" stroke-linecap="round" />
+            <path d="M10 11H14" stroke="#CBD5E1" stroke-width="1.5" stroke-linecap="round" />
+            <path d="M10 14H12" stroke="#CBD5E1" stroke-width="1.5" stroke-linecap="round" />
+          </svg> Collection Sheet
+        </button>
+      </li>
+      <li class="nav-item">
+        <button id="viewPaymentInput">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="margin-right:8px">
+            <rect x="2" y="5" width="20" height="14" rx="2" fill="#22C55E" />
+            <circle cx="12" cy="12" r="4" fill="#065F46" />
+            <path d="M12 10V14" stroke="#A7F3D0" stroke-width="2" stroke-linecap="round" />
+            <path d="M10 12H14" stroke="#A7F3D0" stroke-width="2" stroke-linecap="round" />
+          </svg> Receive Payment
+        </button>
+      </li>
+
+      <li class="nav-item">
+        <button id="viewMonthly">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="margin-right:8px">
+            <rect x="3" y="6" width="18" height="15" rx="2" fill="white" stroke="#CBD5E1" stroke-width="2" />
+            <path d="M3 10H21" stroke="#EF4444" stroke-width="2" />
+            <path d="M3 6C3 4.89543 3.89543 4 5 4H19C20.1046 4 21 4.89543 21 6V10H3V6Z" fill="#EF4444" />
+            <rect x="7" y="13" width="2" height="2" rx="1" fill="#64748B" />
+            <rect x="11" y="13" width="2" height="2" rx="1" fill="#64748B" />
+            <rect x="15" y="13" width="2" height="2" rx="1" fill="#64748B" />
+          </svg> Monthly Report
+        </button>
+      </li>
+      <li class="nav-item hidden" id="viewCollectorsWrapper">
+        <button id="viewCollectors">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="margin-right:8px">
+            <circle cx="9" cy="9" r="4" fill="#6366F1" />
+            <path d="M3 18C3 15.7909 5.68629 14 9 14C12.3137 14 15 15.7909 15 18H3Z" fill="#6366F1" />
+            <circle cx="18" cy="12" r="3" fill="#A855F7" />
+            <path d="M21 19C21 17.6537 19.8665 16.5 18 16.5C16.1335 16.5 15 17.6537 15 19H21Z" fill="#A855F7" />
+          </svg> Manage Collectors
+        </button>
+      </li>
+      <li class="nav-item hidden" id="viewPendingUsersWrapper">
+        <button id="viewPendingUsers">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="margin-right:8px">
+            <circle cx="10" cy="8" r="4" fill="#FCD34D" />
+            <path d="M4 18C4 15.7909 6.68629 14 10 14C13.3137 14 16 15.7909 16 18H4Z" fill="#FCD34D" />
+            <circle cx="19" cy="19" r="5" fill="#EF4444" />
+            <path d="M19 16V19H21" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg> Pending Approvals
+        </button>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="user-profile" id="userInfo">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div class="user-details">
+          <span class="user-name" id="collectorName">User</span>
+          <span class="user-role" id="userRole">Role</span>
+        </div>
+      </div>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <div class="main-wrapper">
+
+    <header class="top-bar">
+      <div class="page-title">Dashboard Overview</div>
+      <!-- You could add search or notifications here -->
+    </header>
+
+    <main id="mainContent">
+
+
+
+      <!-- Dashboard Section (New Feature) -->
+      <div id="dashboardSection">
+
+        <!-- Date Context -->
+        <h3 style="margin-bottom:1.5rem; color:#64748b; font-weight:600;">Overview as of <span
+            id="dashDateContext"></span></h3>
+
+        <!-- Summary KPI Cards (Moved from Grid) -->
+        <section class="dashboard-stats" id="dashboardStats" style="margin-bottom: 2rem;">
+          <div class="stat-card">
+            <span class="stat-label">Total Accounts</span>
+            <span class="stat-value" id="statTotalAccounts">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Outstanding Balance</span>
+            <span class="stat-value" id="statOutstanding">₱0.00</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Collected (Reported)</span>
+            <span class="stat-value" id="statCollected">₱0.00</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Running Balance</span>
+            <span class="stat-value" id="statRunning">₱0.00</span>
+          </div>
+          <div class="stat-card success">
+            <span class="stat-label">Paid Accounts</span>
+            <span class="stat-value" id="statPaidCount">0</span>
+          </div>
+          <div class="stat-card danger">
+            <span class="stat-label">Not Moving</span>
+            <span class="stat-value" id="statNMCount">0</span>
+          </div>
+          <div class="stat-card" style="border-left: 4px solid #f59e0b;">
+            <span class="stat-label">Moving</span>
+            <span class="stat-value" id="statMovingCount">0</span>
+          </div>
+          <div class="stat-card" style="border-left: 4px solid #8b5cf6;">
+            <span class="stat-label">NMSR</span>
+            <span class="stat-value" id="statNMSRCount">0</span>
+          </div>
+        </section>
+
+        <!-- Visual Analytics Grid -->
+        <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+          <!-- Bar Chart: Collector Performance -->
+          <div class="card">
+            <h3>Collector Performance (Reported vs Collected)</h3>
+            <div style="position: relative; height: 300px; width: 100%;">
+              <canvas id="dashPerfChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Pie Chart: Status Distribution -->
+          <div class="card">
+            <h3>Account Status Distribution</h3>
+            <div style="position: relative; height: 300px; width: 100%;">
+              <canvas id="dashStatusChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Insights -->
+        <h3 style="margin-bottom:1rem; color:#0f172a; font-weight:700;">Quick Insights</h3>
+        <div
+          style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 4rem;">
+
+          <div class="card"
+            style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border:1px solid #bae6fd;">
+            <h4 style="font-size:0.9rem; color:#0369a1; margin-bottom:0.5rem;">Top Performing Collector</h4>
+            <div id="insightTopCollector" style="font-size:1.2rem; font-weight:800; color:#0c4a6e;">—</div>
+            <div style="font-size:0.8rem; color:#0284c7;">By Total Collected</div>
+          </div>
+
+          <div class="card"
+            style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border:1px solid #fed7aa;">
+            <h4 style="font-size:0.9rem; color:#9a3412; margin-bottom:0.5rem;">Highest Outstanding</h4>
+            <div id="insightHighOutstanding" style="font-size:1.2rem; font-weight:800; color:#7c2d12;">—</div>
+            <div style="font-size:0.8rem; color:#ea580c;">All Accounts Total</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Grid Section (Default View) -->
+      <div id="gridSection" class="hidden">
+
+
+        <div class="filters-container grid-filters">
+
+          <!-- Date Range (First) -->
+          <!-- Month Reported Range Filter -->
+          <div class="date-range-container">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-right:0.5rem;">
+              <span class="date-label" style="font-weight:600; color:var(--color-primary)">From:</span>
+              <div class="date-input-group">
+                <select id="filterStartYear" class="date-input"
+                  style="border:none; background:transparent; font-size:0.9rem; cursor:pointer; outline:none; padding-right:0;">
+                  <!-- JS populated -->
+                </select>
+              </div>
+              <div class="date-input-group">
+                <select id="filterStartMonth" class="date-input"
+                  style="border:none; background:transparent; font-size:0.9rem; cursor:pointer; outline:none; padding-left:0;">
+                  <option value="01">Jan</option>
+                  <option value="02">Feb</option>
+                  <option value="03">Mar</option>
+                  <option value="04">Apr</option>
+                  <option value="05">May</option>
+                  <option value="06">Jun</option>
+                  <option value="07">Jul</option>
+                  <option value="08">Aug</option>
+                  <option value="09">Sep</option>
+                  <option value="10">Oct</option>
+                  <option value="11">Nov</option>
+                  <option value="12">Dec</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="width:1px; height:20px; background:var(--color-border); margin:0 0.5rem;"></div>
+
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span class="date-label" style="font-weight:600; color:var(--color-danger)">To:</span>
+              <div class="date-input-group">
+                <select id="filterEndYear" class="date-input"
+                  style="border:none; background:transparent; font-size:0.9rem; cursor:pointer; outline:none; padding-right:0;">
+                  <!-- JS populated -->
+                </select>
+              </div>
+              <div class="date-input-group">
+                <select id="filterEndMonth" class="date-input"
+                  style="border:none; background:transparent; font-size:0.9rem; cursor:pointer; outline:none; padding-left:0;">
+                  <option value="01">Jan</option>
+                  <option value="02">Feb</option>
+                  <option value="03">Mar</option>
+                  <option value="04">Apr</option>
+                  <option value="05">May</option>
+                  <option value="06">Jun</option>
+                  <option value="07">Jul</option>
+                  <option value="08">Aug</option>
+                  <option value="09">Sep</option>
+                  <option value="10">Oct</option>
+                  <option value="11">Nov</option>
+                  <option value="12">Dec</option>
+                </select>
+              </div>
+            </div>
+
+            <button id="applyDateFilter" class="btn-primary"
+              style="padding:0.3rem 0.8rem; margin-left:0.5rem; font-size:0.8rem;">
+              <i class="fas fa-filter"></i> Apply
+            </button>
+            <button id="clearDateFilter" class="btn-primary"
+              style="padding:0.3rem 0.8rem; margin-left:0.3rem; font-size:0.8rem; background-color:var(--color-text-muted);">
+              Cancel
+            </button>
+          </div>
+
+          <select id="filterCollector">
+            <option value="">All Collector</option>
+          </select>
+
+          <select id="filterStatus">
+            <option value="">All Status</option>
+            <option value="Paid">Paid</option>
+            <option value="Moving">M</option>
+            <option value="NM">NM</option>
+            <option value="NMSR">NMSR</option>
+          </select>
+
+          <select id="filterLocation">
+            <option value="">All Location</option>
+            <option value="L">Located</option>
+            <option value="NL">Not Located</option>
+          </select>
+
+          <select id="filterArea">
+            <option value="">All Area</option>
+          </select>
+
+          <select id="filterCity">
+            <option value="">All City</option>
+          </select>
+
+          <select id="filterBarangay">
+            <option value="">All Barangay</option>
+          </select>
+
+        </div>
+
+        <div class="actions-toolbar">
+          <input type="text" id="searchInput" class="search-input" placeholder="Search Code, First or Last Name..." />
+          <button id="addLoanBtn" class="btn-primary">+ New Client</button>
+          <button id="exportPdf" class="btn-primary" style="background:#ef4444">PDF</button>
+          <button id="exportXls" class="btn-primary" style="background:#10b981">Excel</button>
+        </div>
+
+        <!-- Table was excluded from gridSection, fixing that -->
+        <div class="table-container">
+          <table class="grid" id="loanGrid">
+            <thead>
+              <tr>
+                <th>Collector</th>
+                <th>Code</th>
+                <th>Borrower</th>
+                <th>Mo. Reported</th>
+                <th>Due Date</th>
+                <th>Outstanding</th>
+                <th>Collected</th>
+                <th>Running</th>
+                <th>Status</th>
+                <th>Location</th>
+                <th>Area</th>
+                <th>City</th>
+                <th>Barangay</th>
+                <th id="actionsHeader">Manage</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+              <tr class="totals">
+                <td colspan="5">Totals</td>
+                <td id="totalOutstanding">₱0.00</td>
+                <td id="totalCollected">₱0.00</td>
+                <td id="totalRunning">₱0.00</td>
+                <td colspan="6"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Reports Section -->
+      <div id="reportsSection" class="hidden">
+
+        <!-- Collector Performance Chart -->
+        <div class="card" style="margin-bottom: 2rem;">
+          <h3>Performance Overview</h3>
+          <div style="position: relative; height: 300px; width: 100%;">
+            <canvas id="performanceChart"></canvas>
+          </div>
+        </div>
+
+        <div class="report-grid" style="display:grid; grid-template-columns: 1fr; gap: 2rem;">
+
+          <div class="card">
+            <h3>Collector Performance</h3>
+            <div class="table-container" style="border:none; box-shadow:none; margin:0;">
+              <table class="grid" id="performanceTable">
+                <thead>
+                  <tr>
+                    <th>Collector</th>
+                    <th>No. of Accounts</th>
+                    <th>Reporting Amount</th>
+                    <th>Collected</th>
+                    <th>Running Balance</th>
+                    <th>Rate (%)</th>
+                    <th>Paid Accounts</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Aging of Receivables</h3>
+            <div class="table-container" style="border:none; box-shadow:none; margin:0;">
+              <table class="grid" id="agingTable">
+                <thead>
+                  <tr>
+                    <th>Collector</th>
+                    <th>Bucket</th>
+                    <th>Accounts</th>
+                    <th>Reported Amount</th>
+                    <th>Collected Amount</th>
+                    <th>Ending Balance</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="print-actions">
+            <button onclick="window.print()" class="btn-primary">Print Report</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Collection Sheet Section -->
+      <div id="collectionSheetSection" class="hidden">
+        <div class="card">
+          <header class="modal-header" style="justify-content:flex-start; gap:1rem;">
+            <h3>Generate Collection Sheet</h3>
+          </header>
+          <div id="collectionSheetSelectWrapper" style="padding:1rem;">
+            <p style="margin-bottom:1rem; color:#ccc;">Select a collector to generate their collection sheet:</p>
+            <div id="collectionSheetButtons" style="display:flex; flex-wrap:wrap; gap:1rem;">
+              <!-- Buttons will be injected here -->
+            </div>
+          </div>
+
+          <div id="collectionSheetPreviewWrapper" class="hidden" style="padding:1rem;">
+            <div class="actions" style="margin-bottom:1rem; display:flex; gap:1rem;">
+              <button id="backToSheetSelect" class="btn-primary"
+                style="background:var(--color-text-muted)">Back</button>
+              <button id="printSheetBtn" class="btn-primary">Print Sheet</button>
+            </div>
+            <div id="collectionSheetPreview"
+              style="background:white; padding:20px; border:1px solid #ccc; max-height:800px; overflow-y:auto; color:black;">
+              <!-- Preview Content Goes Here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Input Section -->
+      <div id="paymentInputSection" class="hidden">
+        <div class="card" style="max-width: 600px; margin: 0 auto;">
+          <h3 style="margin-bottom: 1.5rem;">Input Payment via Code</h3>
+
+          <!-- Search Step -->
+          <div id="paymentSearchStep">
+            <div style="display:flex; gap:1rem; margin-bottom:1.5rem;">
+              <input type="text" id="paymentInputCode" class="input-theme" placeholder="Enter Client Code (e.g. 001)" />
+              <button id="paymentFindBtn" class="btn-primary" style="margin-top:0;">Find Client</button>
+            </div>
+            <div id="paymentSearchResult" class="hidden"
+              style="background:var(--color-bg); padding:1rem; border-radius:8px; border:1px solid var(--color-border);">
+              <h4 style="color:var(--color-primary); font-size:0.8rem; text-transform:uppercase; margin-bottom:0.5rem;">
+                Client
+                Details</h4>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-bottom:1rem;">
+                <div><strong>Name:</strong> <span id="payClientName"></span></div>
+                <div><strong>Code:</strong> <span id="payClientCode"></span></div>
+                <div><strong>Collector:</strong> <span id="payClientCollector"></span></div>
+                <div><strong>Area:</strong> <span id="payClientArea"></span></div>
+                <div><strong>Balance:</strong> <span id="payClientBalance" style="color:var(--color-danger)"></span>
+                </div>
+              </div>
+
+              <hr style="border:0; border-top:1px solid var(--color-border); margin:1rem 0;" />
+
+              <form id="paymentInputForm">
+                <input type="hidden" id="payClientLoanId" />
+                <div style="margin-bottom:1rem;">
+                  <label
+                    style="display:block; margin-bottom:0.4rem; color:var(--color-sidebar); font-weight:600;">Payment
+                    Date</label>
+                  <input type="date" id="payInputDate" required class="input-theme" />
+                </div>
+                <div style="margin-bottom:1.5rem;">
+                  <label
+                    style="display:block; margin-bottom:0.4rem; color:var(--color-sidebar); font-weight:600;">Amount</label>
+                  <input type="number" id="payInputAmount" step="0.01" min="0.01" required placeholder="0.00"
+                    class="input-theme" />
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">Submit
+                  Payment</button>
+              </form>
+            </div>
+            <div id="paymentSearchError" class="hidden" style="margin-top:1rem; color:#ef4444; text-align:center;">
+              Client not found.</div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Monthly Report Section -->
+      <div id="monthlyReportSection" class="hidden">
+        <div class="card">
+          <header class="modal-header"
+            style="border:none; margin-bottom: 0.5rem; justify-content: flex-start; gap: 1rem; flex-wrap:wrap;">
+            <h3>Monthly Report</h3>
+            <select id="monthlyYear"
+              style="padding:0.4rem; border-radius:4px; background:#0f172a; color:#fff; border:1px solid #334155;"></select>
+            <div style="display:flex;">
+              <button id="btnReported" class="btn-primary active" style="border-radius: 4px 0 0 4px;">Reported Past
+                Due</button>
+              <button id="btnCollection" class="btn-primary"
+                style="border-radius: 0 4px 4px 0; background-color: #047857;">Past Due Collection</button>
+            </div>
+            <button id="refreshMonthly" class="btn-primary">Generate</button>
+            <button id="exportMonthlyXls" class="btn-primary" style="background:#10b981">Excel</button>
+            <button id="printMonthly" class="btn-primary" style="background:#064e3b">Print</button>
+          </header>
+          <div class="table-container">
+            <table class="grid" id="monthlyTable">
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Collection Summary Report (Date Range) -->
+        <div class="card" style="margin-top: 2rem;">
+          <header class="modal-header"
+            style="border:none; margin-bottom: 0.5rem; justify-content: flex-start; gap: 1rem; flex-wrap:wrap;">
+            <h3>Collection Summary (Date Range)</h3>
+
+            <div class="date-range-container" style="border: 1px solid #10b981;">
+              <div class="date-input-group">
+                <span class="date-label">From:</span>
+                <input type="date" id="summaryStartDate" class="date-input" style="background:transparent; color:#000;">
+              </div>
+              <div style="width:1px; height:20px; background:var(--color-border); margin:0 0.5rem;"></div>
+              <div class="date-input-group">
+                <span class="date-label">To:</span>
+                <input type="date" id="summaryEndDate" class="date-input" style="background:transparent; color:#000;">
+              </div>
+            </div>
+
+            <button id="btnGenerateSummary" class="btn-primary">Filter</button>
+          </header>
+
+          <div class="table-container">
+            <table class="grid" id="summaryTable">
+              <thead>
+                <tr>
+                  <th style="background:#064e3b; color:#fff">Collector Name</th>
+                  <th style="background:#064e3b; color:#fff; text-align:right;">Total Collection</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="2" style="text-align:center; color:#64748b;">Select dates and click Filter</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Collectors Section -->
+      <div id="collectorsSection" class="hidden">
+        <div class="card">
+          <header class="modal-header">
+            <h3>Collector Management</h3>
+            <button id="addCollectorBtn" class="btn-primary">+ Add Collector</button>
+          </header>
+          <div class="table-container">
+            <table class="grid" id="collectorsTable">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pending Approvals Section (Admin Only) -->
+      <div id="pendingUsersSection" class="hidden">
+        <div class="card">
+          <header class="modal-header">
+            <h3>Pending User Approvals</h3>
+            <button id="refreshPendingBtn" class="btn-primary" style="background:var(--color-primary)">Refresh</button>
+          </header>
+          <div class="table-container">
+            <table class="grid" id="pendingUsersTable">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Full Name</th>
+                  <th>Role</th>
+                  <th>Registered At</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- MODALS (Keep existing structures) -->
+
+  <!-- Client Profile Modal (For Search & View) -->
+  <div id="clientProfileModal" class="modal hidden" style="z-index: 9999;">
+    <div class="modal-content"
+      style="max-width:800px; padding: 0; background-color: #f8fafc; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;">
+
+      <!-- Header -->
+      <header class="modal-header-green">
+        <h3>Client Profile</h3>
+        <button id="closeProfileModal" class="close-btn">&times;</button>
+      </header>
+
+      <div id="printableProfile" style="padding: 2rem; overflow-y: auto; flex: 1;">
+
+        <!-- Print Header -->
+        <div class="print-only" style="display:none; text-align:center; margin-bottom:20px;">
+          <h2>Melann Lending</h2>
+          <p>Client Profile Record</p>
+          <hr />
+        </div>
+
+        <!-- Client Information Section -->
+        <div
+          style="background: white; border-radius: 8px; border: 1px solid #e2e8f0; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+
+          <h4
+            style="margin-top: 0; margin-bottom: 1.5rem; color: #334155; font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.5rem;">
+            Client Information
+          </h4>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2rem;">
+
+            <!-- Row 1 -->
+            <div>
+              <label
+                style="display: block; color: #64748b; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem;">Code</label>
+              <div id="cpCode" style="font-size: 1.1rem; font-weight: 600; color: #0f172a;"></div>
+            </div>
+            <div>
+              <label
+                style="display: block; color: #64748b; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem;">Full
+                Name</label>
+              <div id="cpName" style="font-size: 1.1rem; font-weight: 600; color: #0f172a;"></div>
+            </div>
+
+            <!-- Row 2: Full Address spans 2 columns -->
+            <div style="grid-column: span 2;">
+              <label
+                style="display: block; color: #64748b; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem;">Full
+                Address</label>
+              <div id="cpAddress" style="font-size: 1rem; color: #334155; line-height: 1.5;"></div>
+            </div>
+
+            <!-- Row 3 -->
+            <div>
+              <label
+                style="display: block; color: #64748b; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem;">Collector</label>
+              <div id="cpCollector" style="font-size: 1rem; color: #334155;"></div>
+            </div>
+            <div>
+              <label
+                style="display: block; color: #64748b; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem;">Month
+                Reported</label>
+              <div id="cpMonth" style="font-size: 1rem; color: #334155;"></div>
+            </div>
+
+            <!-- Row 4 -->
+            <div>
+              <label
+                style="display: block; color: #64748b; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem;">Due
+                Date</label>
+              <div id="cpDueDate" style="font-size: 1rem; color: #334155;"></div>
+            </div>
+            <div>
+              <label
+                style="display: block; color: #64748b; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem;">Reported
+                Balance</label>
+              <div id="cpReported" style="font-size: 1rem; font-weight: 600; color: #334155;"></div>
+            </div>
+
+            <!-- Running Balance Highlighted -->
+            <div
+              style="grid-column: span 2; background-color: #fef2f2; border: 1px solid #fee2e2; border-radius: 6px; padding: 1rem; display: flex; align-items: center; gap: 1rem;">
+              <div style="width: 4px; height: 40px; background-color: #ef4444; border-radius: 2px;"></div>
+              <div>
+                <label
+                  style="display: block; color: #ef4444; font-size: 0.75rem; text-transform: uppercase; font-weight: 700; margin-bottom: 0.25rem;">Running
+                  Balance</label>
+                <div id="cpRunning" style="font-size: 1.5rem; font-weight: 700; color: #dc2626;"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Payment History Section -->
+        <div>
+          <h4
+            style="margin-top: 0; margin-bottom: 1rem; color: #334155; font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+            Payment History
+          </h4>
+
+          <div
+            style="background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <table class="grid" id="cpPaymentsTable" style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; text-align: left;">
+                  <th
+                    style="padding: 1rem; color: #64748b; font-weight: 600; font-size: 0.8rem; text-transform: uppercase;">
+                    Date</th>
+                  <th
+                    style="padding: 1rem; color: #64748b; font-weight: 600; font-size: 0.8rem; text-transform: uppercase;">
+                    OR Number</th>
+                  <th
+                    style="padding: 1rem; color: #64748b; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; text-align: right;">
+                    Amount</th>
+                  <th
+                    style="padding: 1rem; color: #64748b; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; text-align: right;">
+                    Balance After Payment</th>
+                  <th
+                    style="padding: 1rem; color: #64748b; font-weight: 600; font-size: 0.8rem; text-transform: uppercase;">
+                    Recorded By</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <footer class="modal-footer-green">
+        <button id="printProfileBtn" class="btn-primary">
+          <i class="fas fa-print" style="margin-right: 8px;"></i> Print Profile
+        </button>
+      </footer>
+
+
+    </div>
+  </div>
+
+  <!-- History Modal -->
+  <div id="historyModal" class="modal hidden">
+    <div class="modal-content">
+      <header class="modal-header">
+        <h3>Loan Change History</h3>
+        <button id="closeModal" class="close-btn">&times;</button>
+      </header>
+      <div class="table-container" style="margin-bottom:0;">
+        <table class="grid" id="historyTable">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Old Value</th>
+              <th>New Value</th>
+              <th>Changed By</th>
+              <th>Date/Time</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loan Modal -->
+  <div id="loanModal" class="modal hidden">
+    <div class="modal-content" style="max-width:600px;">
+      <header class="modal-header">
+        <h3 id="loanModalTitle">Input New Client</h3>
+        <button id="closeLoanModal" class="close-btn">&times;</button>
+      </header>
+      <form id="loanForm" class="login-form">
+        <input type="hidden" id="edit_loan_id" name="loan_id" />
+
+        <!-- 1. Code & Full Name -->
+        <div style="display:grid; grid-template-columns:1fr 2fr; gap:1rem;">
+          <div><label>Code</label><input type="text" id="loan_code" name="loan_code" required placeholder="e.g. 001" />
+          </div>
+          <div><label>Full Name</label><input type="text" id="borrower_name" name="borrower_name" required /></div>
+        </div>
+
+        <!-- 2. Collector -->
+        <div style="margin-top:1rem;">
+          <label>Collector</label>
+          <select id="collector_id" name="collector_id" required>
+            <option value="">Select</option>
+          </select>
+        </div>
+
+        <!-- 3. Area, City, Barangay -->
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; margin-top:1rem;">
+          <div><label>Area</label><input type="text" id="area" name="area" /></div>
+          <div><label>City</label><input type="text" id="city" name="city" /></div>
+          <div><label>Barangay</label><input type="text" id="barangay" name="barangay" /></div>
+        </div>
+
+        <!-- 4. Full Address -->
+        <div style="margin-top:1rem;">
+          <label>Full Address</label>
+          <input type="text" id="full_address" name="full_address" placeholder="St. / Subd. / House No." />
+        </div>
+
+        <!-- 5. Month Reported & Due Date -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem;">
+          <div><label>Month Reported</label><input type="text" id="month_reported" name="month_reported" required
+              placeholder="MM-YY" /></div>
+          <div><label>Due Date</label><input type="date" id="due_date" name="due_date" required /></div>
+        </div>
+
+        <!-- 6. Reported Balance, Moving, Located -->
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; margin-top:1rem;">
+          <div><label>Reported Balance</label><input type="number" step="0.01" id="outstanding_balance"
+              name="outstanding_balance" required /></div>
+          <div>
+            <label>Moving Status</label>
+            <select id="moving_status" name="moving_status">
+              <option value="Moving">Moving</option>
+              <option value="NM">NM</option>
+              <option value="NMSR">NMSR</option>
+              <option value="Paid">Paid</option>
+            </select>
+          </div>
+          <div>
+            <label>Located Status</label>
+            <select id="location_status" name="location_status">
+              <option value="L">Located (L)</option>
+              <option value="NL">Not Located (NL)</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary" style="width:100%; margin-top:1.5rem; justify-content:center;">Save
+          Record</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Collector Modal -->
+  <div id="collectorModal" class="modal hidden">
+    <div class="modal-content" style="max-width:400px;">
+      <header class="modal-header">
+        <h3 id="collectorModalTitle">Add Collector</h3>
+        <button id="closeCollectorModal" class="close-btn">&times;</button>
+      </header>
+      <form id="collectorForm" class="login-form">
+        <input type="hidden" id="edit_collector_id" name="collector_id" />
+        <label>Full Name</label>
+        <input type="text" id="col_name" name="name" required />
+        <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">Save</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div id="paymentModal" class="modal hidden">
+    <div class="modal-content" style="max-width:400px;">
+      <header class="modal-header">
+        <h3>Add Payment</h3>
+        <button id="closePaymentModal" class="close-btn">&times;</button>
+      </header>
+      <form id="paymentForm" class="login-form">
+        <input type="hidden" id="payment_loan_id" name="loan_id" />
+        <p id="paymentBorrowerName" style="margin-bottom:1rem; font-weight:600; color:#fff;"></p>
+
+        <label>Date</label>
+        <input type="date" id="payment_date" name="payment_date" required />
+
+        <label>Amount</label>
+        <input type="number" id="payment_amount" name="amount" step="0.01" min="0.01" required />
+
+        <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">Confirm Payment</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Payment History Modal -->
+  <div id="paymentHistoryModal" class="modal hidden">
+    <div class="modal-content" style="max-width:550px;">
+      <header class="modal-header">
+        <h3 id="paymentHistoryTitle">Payment History</h3>
+        <button id="closePaymentHistoryModal" class="close-btn">&times;</button>
+      </header>
+      <div id="printablePaymentHistory">
+        <div class="print-only" style="display:none;">
+          <h2>Melann Lending</h2>
+          <hr />
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:1rem; align-items:flex-end;">
+          <span id="historyBorrowerName" style="font-weight:700; font-size:1.1rem; color:#fff;"></span>
+          <div class="text-right">
+            <div>Collected: <span id="historyTotalCollected" style="color:var(--color-success)"></span></div>
+            <div>Running: <span id="historyRunningBalance" style="color:var(--color-danger)"></span></div>
+          </div>
+        </div>
+        <div class="table-container" style="border:none; box-shadow:none;">
+          <table class="grid" id="paymentHistoryTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Recorded By</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:flex-end; margin-top:1rem;">
+        <button id="printPaymentHistoryBtn" class="btn-primary">Print History</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="dashboard-logic.js?v=1"></script>
+  <!-- Simple Toggle Logic for Sidebar Active State -->
+  <script>
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navItems.forEach(n => n.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+    // Ensure hidden wrapper works
+    if (document.getElementById('viewCollectorsWrapper').classList.contains('hidden')) {
+      // Check user role via app.js logic later, but for now just visual
+    }
+  </script>
+</body>
+
+</html>
