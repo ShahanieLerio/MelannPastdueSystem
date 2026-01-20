@@ -1171,7 +1171,10 @@ body.login-page {
     0 8px 10px -6px rgba(0, 0, 0, 0.1);
   padding: 3rem;
   max-width: 1000px;
-  /* Wider for buttons */
+  margin: 0 auto;
+  /* Center the card itself */
+  text-align: center;
+  /* Center text inside */
 }
 
 #collectionSheetSection h3 {
@@ -1439,6 +1442,8 @@ body.login-page {
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.5rem;
   padding: 0.5rem 0;
+  justify-content: center;
+  /* Center the grid items */
 }
 
 .collection-btn {
