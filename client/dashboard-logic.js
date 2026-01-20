@@ -1624,9 +1624,21 @@ async function loadCollectionSheetButtons() {
 
     collectors.forEach(c => {
       const btn = document.createElement('button');
-      btn.className = 'btn-primary';
-      btn.style.padding = '1rem 2rem';
-      btn.textContent = c.name;
+      btn.className = 'collection-btn';
+
+      const icon = document.createElement('i');
+      if (c.name.toUpperCase().includes('PAST DUE')) {
+        icon.className = 'fas fa-map-marker-alt';
+      } else {
+        icon.className = 'fas fa-user-tie';
+      }
+
+      const label = document.createElement('span');
+      label.textContent = c.name;
+
+      btn.appendChild(icon);
+      btn.appendChild(label);
+
       btn.onclick = () => generateCollectionSheet(c);
       container.appendChild(btn);
     });
