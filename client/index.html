@@ -16,8 +16,10 @@
   <!-- Sidebar -->
   <aside class="sidebar">
     <div class="brand">
-      <img src="logo.jpg" alt="Melann Logo" class="brand-logo" />
-      <span>Melann Lending Past Due Monitoring</span>
+      <div class="brand-logo-container">
+        <img src="logo.jpg" alt="Melann Logo" class="brand-logo" />
+      </div>
+      <span>Melann<br>Lending</span>
     </div>
 
     <ul class="nav-links">
@@ -149,55 +151,58 @@
             id="dashDateContext"></span></h3>
 
         <!-- Summary KPI Cards (Moved from Grid) -->
-        <section class="dashboard-stats" id="dashboardStats" style="margin-bottom: 2rem;">
+        <!-- Summary KPI Cards -->
+        <section class="dashboard-stats" id="dashboardStats">
           <div class="stat-card">
             <span class="stat-label">Total Accounts</span>
             <span class="stat-value" id="statTotalAccounts">0</span>
           </div>
-          <div class="stat-card">
-            <span class="stat-label">Outstanding Balance</span>
-            <span class="stat-value" id="statOutstanding">₱0.00</span>
-          </div>
-          <div class="stat-card">
+          <div class="stat-card stat-success">
             <span class="stat-label">Collected (Reported)</span>
             <span class="stat-value" id="statCollected">₱0.00</span>
           </div>
-          <div class="stat-card">
+          <div class="stat-card stat-danger">
+            <span class="stat-label">Outstanding Balance</span>
+            <span class="stat-value" id="statOutstanding">₱0.00</span>
+          </div>
+          <div class="stat-card stat-info">
             <span class="stat-label">Running Balance</span>
             <span class="stat-value" id="statRunning">₱0.00</span>
           </div>
-          <div class="stat-card success">
+          <div class="stat-card">
             <span class="stat-label">Paid Accounts</span>
             <span class="stat-value" id="statPaidCount">0</span>
           </div>
-          <div class="stat-card danger">
+          <div class="stat-card">
             <span class="stat-label">Not Moving</span>
             <span class="stat-value" id="statNMCount">0</span>
           </div>
-          <div class="stat-card" style="border-left: 4px solid #f59e0b;">
+          <div class="stat-card stat-warning">
             <span class="stat-label">Moving</span>
             <span class="stat-value" id="statMovingCount">0</span>
           </div>
-          <div class="stat-card" style="border-left: 4px solid #8b5cf6;">
+          <div class="stat-card stat-dark">
             <span class="stat-label">NMSR</span>
             <span class="stat-value" id="statNMSRCount">0</span>
           </div>
         </section>
 
         <!-- Visual Analytics Grid -->
-        <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+        <div class="dashboard-visuals">
           <!-- Bar Chart: Collector Performance -->
-          <div class="card">
-            <h3>Collector Performance (Reported vs Collected)</h3>
-            <div style="position: relative; height: 300px; width: 100%;">
+          <div class="card chart-card">
+            <h3>Collector Performance</h3>
+            <p class="chart-subtitle">Reported vs Collected comparison per collector</p>
+            <div class="chart-container">
               <canvas id="dashPerfChart"></canvas>
             </div>
           </div>
 
           <!-- Pie Chart: Status Distribution -->
-          <div class="card">
-            <h3>Account Status Distribution</h3>
-            <div style="position: relative; height: 300px; width: 100%;">
+          <div class="card chart-card">
+            <h3>Account Distribution</h3>
+            <p class="chart-subtitle">Status breakdown of all loan accounts</p>
+            <div class="chart-container">
               <canvas id="dashStatusChart"></canvas>
             </div>
           </div>
@@ -461,51 +466,78 @@
 
       <!-- Payment Input Section -->
       <div id="paymentInputSection" class="hidden">
-        <div class="card" style="max-width: 600px; margin: 0 auto;">
-          <h3 style="margin-bottom: 1.5rem;">Input Payment via Code</h3>
+        <div class="card payment-card">
+          <h3>Receive Payment</h3>
+          <p class="card-description">Quickly record client payments by entering their unique code.</p>
 
-          <!-- Search Step -->
           <div id="paymentSearchStep">
-            <div style="display:flex; gap:1rem; margin-bottom:1.5rem;">
-              <input type="text" id="paymentInputCode" class="input-theme" placeholder="Enter Client Code (e.g. 001)" />
-              <button id="paymentFindBtn" class="btn-primary" style="margin-top:0;">Find Client</button>
+            <div class="payment-search-box">
+              <div class="input-with-icon">
+                <i class="fas fa-barcode"></i>
+                <input type="text" id="paymentInputCode" placeholder="Enter Client Code (e.g. 3484)" />
+              </div>
+              <button id="paymentFindBtn" class="btn-primary">Find Client</button>
             </div>
-            <div id="paymentSearchResult" class="hidden"
-              style="background:var(--color-bg); padding:1rem; border-radius:8px; border:1px solid var(--color-border);">
-              <h4 style="color:var(--color-primary); font-size:0.8rem; text-transform:uppercase; margin-bottom:0.5rem;">
-                Client
-                Details</h4>
-              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-bottom:1rem;">
-                <div><strong>Name:</strong> <span id="payClientName"></span></div>
-                <div><strong>Code:</strong> <span id="payClientCode"></span></div>
-                <div><strong>Collector:</strong> <span id="payClientCollector"></span></div>
-                <div><strong>Area:</strong> <span id="payClientArea"></span></div>
-                <div><strong>Balance:</strong> <span id="payClientBalance" style="color:var(--color-danger)"></span>
+
+            <div id="paymentSearchResult" class="hidden client-detail-premium">
+              <div class="detail-header">
+                <span class="detail-badge">Client Identified</span>
+                <h4 id="payClientNameDisplay">Client Details</h4>
+              </div>
+
+              <div class="detail-grid">
+                <div class="detail-item">
+                  <span class="detail-label">Full Name</span>
+                  <span id="payClientName" class="detail-value">---</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Client Code</span>
+                  <span id="payClientCode" class="detail-value">---</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Collector</span>
+                  <span id="payClientCollector" class="detail-value">---</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Area</span>
+                  <span id="payClientArea" class="detail-value">---</span>
+                </div>
+                <div class="detail-item highlight">
+                  <span class="detail-label">Outstanding Balance</span>
+                  <span id="payClientBalance" class="detail-value price">₱0.00</span>
                 </div>
               </div>
 
-              <hr style="border:0; border-top:1px solid var(--color-border); margin:1rem 0;" />
+              <div class="payment-divider"></div>
 
-              <form id="paymentInputForm">
+              <form id="paymentInputForm" class="premium-form">
                 <input type="hidden" id="payClientLoanId" />
-                <div style="margin-bottom:1rem;">
-                  <label
-                    style="display:block; margin-bottom:0.4rem; color:var(--color-sidebar); font-weight:600;">Payment
-                    Date</label>
-                  <input type="date" id="payInputDate" required class="input-theme" />
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Payment Date</label>
+                    <div class="input-with-icon">
+                      <i class="fas fa-calendar-alt"></i>
+                      <input type="date" id="payInputDate" required />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label>Amount to Pay</label>
+                    <div class="input-with-icon">
+                      <i class="fas fa-tag"></i>
+                      <input type="number" id="payInputAmount" step="0.01" min="0.01" required placeholder="0.00" />
+                    </div>
+                  </div>
                 </div>
-                <div style="margin-bottom:1.5rem;">
-                  <label
-                    style="display:block; margin-bottom:0.4rem; color:var(--color-sidebar); font-weight:600;">Amount</label>
-                  <input type="number" id="payInputAmount" step="0.01" min="0.01" required placeholder="0.00"
-                    class="input-theme" />
-                </div>
-                <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">Submit
-                  Payment</button>
+                <button type="submit" class="btn-primary btn-full">
+                  Confirm & Submit Payment
+                </button>
               </form>
             </div>
-            <div id="paymentSearchError" class="hidden" style="margin-top:1rem; color:#ef4444; text-align:center;">
-              Client not found.</div>
+
+            <div id="paymentSearchError" class="hidden error-box">
+              <i class="fas fa-exclamation-circle"></i>
+              Client not found. Please verify the code and try again.
+            </div>
           </div>
         </div>
       </div>
