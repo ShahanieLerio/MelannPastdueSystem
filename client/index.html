@@ -19,7 +19,10 @@
       <div class="brand-logo-container">
         <img src="logo.jpg" alt="Melann Logo" class="brand-logo" />
       </div>
-      <span>Melann<br>Lending</span>
+      <div class="brand-text">
+        <span class="brand-name">Melann Lending</span>
+        <span class="brand-subtitle">Past Due & Reporting Monitoring</span>
+      </div>
     </div>
 
     <ul class="nav-links">
@@ -242,14 +245,12 @@
             <div style="display:flex; align-items:center; gap:0.5rem; margin-right:0.5rem;">
               <span class="date-label" style="font-weight:600; color:var(--color-primary)">From:</span>
               <div class="date-input-group">
-                <select id="filterStartYear" class="date-input"
-                  style="border:none; background:transparent; font-size:0.9rem; cursor:pointer; outline:none; padding-right:0;">
+                <select id="filterStartYear" class="date-input compact">
                   <!-- JS populated -->
                 </select>
               </div>
               <div class="date-input-group">
-                <select id="filterStartMonth" class="date-input"
-                  style="border:none; background:transparent; font-size:0.9rem; cursor:pointer; outline:none; padding-left:0;">
+                <select id="filterStartMonth" class="date-input compact">
                   <option value="01">Jan</option>
                   <option value="02">Feb</option>
                   <option value="03">Mar</option>
@@ -271,14 +272,12 @@
             <div style="display:flex; align-items:center; gap:0.5rem;">
               <span class="date-label" style="font-weight:600; color:var(--color-danger)">To:</span>
               <div class="date-input-group">
-                <select id="filterEndYear" class="date-input"
-                  style="border:none; background:transparent; font-size:0.9rem; cursor:pointer; outline:none; padding-right:0;">
+                <select id="filterEndYear" class="date-input compact">
                   <!-- JS populated -->
                 </select>
               </div>
               <div class="date-input-group">
-                <select id="filterEndMonth" class="date-input"
-                  style="border:none; background:transparent; font-size:0.9rem; cursor:pointer; outline:none; padding-left:0;">
+                <select id="filterEndMonth" class="date-input compact">
                   <option value="01">Jan</option>
                   <option value="02">Feb</option>
                   <option value="03">Mar</option>
@@ -295,12 +294,10 @@
               </div>
             </div>
 
-            <button id="applyDateFilter" class="btn-primary"
-              style="padding:0.3rem 0.8rem; margin-left:0.5rem; font-size:0.8rem;">
+            <button id="applyDateFilter" class="btn-primary compact-btn">
               <i class="fas fa-filter"></i> Apply
             </button>
-            <button id="clearDateFilter" class="btn-primary"
-              style="padding:0.3rem 0.8rem; margin-left:0.3rem; font-size:0.8rem; background-color:var(--color-text-muted);">
+            <button id="clearDateFilter" class="btn-primary compact-btn cancel">
               Cancel
             </button>
           </div>

@@ -39,8 +39,9 @@
   --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   /* Layout Constants */
-  --header-height: 80px;
+  --header-height: 60px;
   --sidebar-width: 280px;
+  --transition-speed: 0.3s;
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -71,8 +72,8 @@ body {
   background: linear-gradient(195deg, #1e293b 0%, #0f172a 100%);
   display: flex;
   flex-direction: column;
-  padding: 2rem 1.5rem;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 1rem 1rem;
+  transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 100;
   box-shadow: 10px 0 30px rgba(0, 0, 0, 0.25);
 }
@@ -81,21 +82,40 @@ body {
   font-size: 1rem;
   font-weight: 800;
   color: #fff;
-  margin-bottom: 3rem;
+  padding: 1.25rem 1.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   letter-spacing: -0.025em;
   text-transform: uppercase;
   line-height: 1.2;
 }
 
-.brand span {
-  color: var(--color-primary);
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.brand-name {
+  font-size: 1.1rem;
+  font-weight: 800;
   background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  display: block;
+}
+
+.brand-subtitle {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.25rem;
+  display: block;
 }
 
 .brand-logo {
@@ -239,28 +259,28 @@ header.top-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2.5rem;
+  padding: 0 1.5rem;
   z-index: 90;
 }
 
 .page-title {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 800;
   color: var(--color-text);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 /* Scrollable Content Area */
 main#mainContent {
   flex: 1;
   overflow-y: auto;
-  padding: 3rem;
+  padding: 2rem;
   scroll-behavior: smooth;
   background-attachment: fixed;
 }
 
 section {
-  margin-bottom: 4rem;
+  margin-bottom: 2.5rem;
 }
 
 /* --- Dashboard Stats --- */
@@ -268,20 +288,20 @@ section {
 /* --- Dashboard Stats --- */
 .dashboard-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .stat-card {
   background: var(--color-surface);
-  padding: 1.75rem;
-  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
   position: relative;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -305,18 +325,18 @@ section {
 }
 
 .stat-label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
   font-weight: 700;
 }
 
 .stat-value {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 800;
   color: var(--color-text);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 /* Stat Card Variations */
@@ -385,7 +405,7 @@ section {
 
 .chart-container {
   position: relative;
-  height: 350px;
+  height: 280px;
   width: 100%;
 }
 
@@ -394,15 +414,16 @@ section {
 .filters-container {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 1.25rem;
+  flex-wrap: nowrap;
+  gap: 0.75rem;
   box-shadow: var(--shadow-sm);
+  overflow-x: auto;
 }
 
 .filters-container:hover {
@@ -412,15 +433,14 @@ section {
 
 .date-range-container {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.25rem;
   align-items: center;
   background: #ffffff;
-  /* White bg for contrast inside green container */
-  padding: 0.4rem 0.8rem;
+  padding: 0.15rem 0.35rem;
   border: 1px solid #34d399;
-  /* Green border */
-  border-radius: 8px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
 }
 
 
@@ -447,6 +467,23 @@ section {
   cursor: pointer;
 }
 
+.date-input.compact {
+  font-size: 0.8rem;
+  padding: 0;
+}
+
+.compact-btn {
+  padding: 0.35rem 0.6rem !important;
+  font-size: 0.75rem !important;
+  margin-left: 0.5rem;
+}
+
+.compact-btn.cancel {
+  background: var(--color-text-muted) !important;
+  margin-left: 0.25rem;
+  box-shadow: none !important;
+}
+
 /* Customizing calendar picker indicator if possible (browser dependent) */
 .date-input::-webkit-calendar-picker-indicator {
   filter: invert(0.4);
@@ -462,34 +499,53 @@ section {
 }
 
 .filters-group select,
-.filters-group input {
-  padding: 0.6rem 2.5rem 0.6rem 1rem;
-  /* Extra right padding for chevron */
+.filters-group input,
+#gridSection select:not(.date-input) {
+  padding: 0.4rem 2rem 0.4rem 0.75rem;
   border: 1px solid var(--color-border);
   border-radius: 6px;
   background-color: #f8fafc;
   color: var(--color-text);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   outline: none;
-  min-width: 140px;
+  min-width: 110px;
+  height: 32px;
   appearance: none;
-  /* Dark SVG chevron for light mode */
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
-  background-position: right 0.8rem center;
-  background-size: 1rem;
+  background-position: right 0.6rem center;
+  background-size: 0.9rem;
+}
+
+/* Specific compact override for date selects */
+#gridSection select.date-input {
+  min-width: 0 !important;
+  width: auto !important;
+  padding: 0 1.25rem 0 0.25rem !important;
+  font-size: 0.75rem !important;
+  height: 28px !important;
+  border: none !important;
+  background-color: transparent !important;
+  background-position: right 0 center !important;
+  background-size: 0.7rem !important;
+}
+
+.date-label {
+  font-size: 0.7rem !important;
+  margin-right: 0.2rem !important;
 }
 
 /* Specific override for the search bar */
 /* Specific override for the search bar */
 .search-input {
   min-width: 320px !important;
-  border-radius: var(--radius-xl) !important;
-  border: 2.5px solid var(--color-border) !important;
+  border-radius: var(--radius-md) !important;
+  border: 1.5px solid var(--color-border) !important;
   background-color: var(--color-surface) !important;
-  padding: 0.8rem 1.75rem !important;
+  padding: 0.5rem 1rem !important;
   color: var(--color-text) !important;
   font-weight: 600 !important;
+  font-size: 0.9rem !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   box-shadow: var(--shadow-sm) !important;
 }
@@ -516,18 +572,18 @@ section {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
   color: white;
   border: none;
-  padding: 0.8rem 1.5rem;
+  padding: 0.5rem 1rem;
   border-radius: var(--radius-md);
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
   text-transform: uppercase;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   letter-spacing: 0.025em;
 }
 
@@ -541,6 +597,14 @@ section {
   transform: translateY(0);
 }
 
+.actions-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
 /* --- Grid / Tables (3D Effect) --- */
 /* --- Grid / Tables --- */
 .table-container {
@@ -548,8 +612,8 @@ section {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   overflow-x: auto;
-  margin-bottom: 2.5rem;
-  box-shadow: var(--shadow-lg);
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-md);
   position: relative;
 }
 
@@ -561,9 +625,10 @@ table.grid {
 
 table.grid th,
 table.grid td {
-  padding: 1.25rem 1.5rem;
+  padding: 0.35rem 0.6rem;
   text-align: left;
   border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
 }
 
 table.grid th {
@@ -587,9 +652,10 @@ table.grid tbody tr:hover {
 }
 
 table.grid td {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 500;
   color: var(--color-text);
+  line-height: 1.2;
 }
 
 .editable {
@@ -606,10 +672,10 @@ table.grid td {
 
 /* Badges */
 .badge {
-  padding: 0.3rem 0.6rem;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
   display: inline-block;
 }
 
@@ -743,23 +809,23 @@ table.grid td {
 
 .card {
   background: var(--color-surface);
-  padding: 2rem;
-  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
-  margin-bottom: 2.5rem;
-  box-shadow: var(--shadow-lg);
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-md);
   transition: all 0.3s ease;
 }
 
 .card:hover {
-  box-shadow: var(--shadow-premium);
+  box-shadow: var(--shadow-lg);
 }
 
 .card h3 {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 800;
   color: var(--color-text);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
