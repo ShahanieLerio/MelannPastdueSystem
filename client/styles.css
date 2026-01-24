@@ -906,8 +906,9 @@ body.login-page {
   background: white;
   border-radius: var(--radius-xl);
   box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.4);
-  width: 900px;
-  max-width: 95%;
+  width: auto;
+  min-width: 900px;
+  max-width: 98vw;
   height: 600px;
   overflow: hidden;
   animation: fadeInDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -942,11 +943,13 @@ body.login-page {
 
 .login-form-side {
   flex: 1;
-  padding: 4rem 3.5rem;
+  padding: 4rem 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   background: white;
+  min-width: 380px;
+  /* Ensure minimum space for inputs */
 }
 
 .login-header-new h2 {
@@ -1036,9 +1039,7 @@ body.login-page {
 
 .login-visual-side {
   flex: 0 0 auto;
-  /* Size based on content (image) */
   background-color: #065f46;
-  /* Dark Green to blend */
   position: relative;
   overflow: hidden;
   display: flex;
@@ -1048,12 +1049,9 @@ body.login-page {
 }
 
 .login-visual-side img.visual-image {
+  height: 100%;
   width: auto;
-  height: auto;
-  max-width: 50vw;
-  /* Limit max width */
-  max-height: 600px;
-  /* Limit height to reasonable card size */
+  max-width: 55vw;
   object-fit: contain;
   display: block;
 }
@@ -1637,4 +1635,20 @@ table.grid tbody tr {
     opacity: 1;
     transform: translateX(0);
   }
+}
+/* Toggle Password Icon */
+.toggle-password {
+    position: absolute;
+    right: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    z-index: 10;
+    transition: color 0.2s;
+}
+
+.toggle-password:hover {
+    color: var(--color-primary);
 }
