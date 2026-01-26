@@ -11,9 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
     const messageDiv = document.getElementById('loginMessage');
+    const formTitle = document.getElementById('formTitle');
+    const brandTitle = document.getElementById('brandTitle');
+    const formSide = document.querySelector('.login-form-side');
     // Event Delegation for Toggle Login / Register
     // We listen on the parent container (login-form-side or document)
-    document.querySelector('.login-form-side').addEventListener('click', (e) => {
+    formSide.addEventListener('click', (e) => {
         if (e.target && e.target.id === 'toggleFormBtn') {
             e.preventDefault();
             messageDiv.textContent = '';
@@ -23,11 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginForm.classList.remove('hidden');
                 registerForm.classList.add('hidden');
                 toggleText.innerHTML = 'Don\'t have an account? <a href="#" id="toggleFormBtn" style="color:var(--color-primary); font-weight:600; text-decoration:none;">Sign Up</a>';
+                if (formTitle) formTitle.textContent = 'Past Due & Reporting Monitoring';
+                if (brandTitle) brandTitle.textContent = 'Melann Lending';
+                formSide.classList.remove('signup-active');
             } else {
                 // Switch to Register
                 loginForm.classList.add('hidden');
                 registerForm.classList.remove('hidden');
                 toggleText.innerHTML = 'Already have an account? <a href="#" id="toggleFormBtn" style="color:var(--color-primary); font-weight:600; text-decoration:none;">Sign In</a>';
+                if (formTitle) formTitle.textContent = 'Sign Up';
+                if (brandTitle) brandTitle.textContent = 'Past Due and Reports Monitoring';
+                formSide.classList.add('signup-active');
             }
         }
     });

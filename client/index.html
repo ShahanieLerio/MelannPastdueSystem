@@ -542,23 +542,35 @@
 
       <!-- Monthly Report Section -->
       <div id="monthlyReportSection" class="hidden">
-        <div class="card">
-          <header class="modal-header"
-            style="border:none; margin-bottom: 0.5rem; justify-content: flex-start; gap: 1rem; flex-wrap:wrap;">
-            <h3>Monthly Report</h3>
-            <select id="monthlyYear"
-              style="padding:0.4rem; border-radius:4px; background:#0f172a; color:#fff; border:1px solid #334155;"></select>
-            <div style="display:flex;">
-              <button id="btnReported" class="btn-primary active" style="border-radius: 4px 0 0 4px;">Reported Past
-                Due</button>
-              <button id="btnCollection" class="btn-primary"
-                style="border-radius: 0 4px 4px 0; background-color: #047857;">Past Due Collection</button>
+
+        <!-- Main Monthly Report Card -->
+        <div class="card report-card">
+          <header class="report-header">
+            <div class="report-title-group">
+              <h3>Monthly Report</h3>
+              <select id="monthlyYear" class="report-select"></select>
             </div>
-            <button id="refreshMonthly" class="btn-primary">Generate</button>
-            <button id="exportMonthlyXls" class="btn-primary" style="background:#10b981">Excel</button>
-            <button id="printMonthly" class="btn-primary" style="background:#064e3b">Print</button>
+
+            <div class="report-controls">
+              <div class="toggle-group">
+                <button id="btnReported" class="btn-toggle active">Reported Past Due</button>
+                <button id="btnCollection" class="btn-toggle">Past Due Collection</button>
+              </div>
+              <div class="action-group">
+                <button id="refreshMonthly" class="btn-action">
+                  <i class="fas fa-sync-alt"></i> Generate
+                </button>
+                <button id="exportMonthlyXls" class="btn-action btn-excel">
+                  <i class="fas fa-file-excel"></i> Excel
+                </button>
+                <button id="printMonthly" class="btn-action btn-print">
+                  <i class="fas fa-print"></i> Print
+                </button>
+              </div>
+            </div>
           </header>
-          <div class="table-container">
+
+          <div class="table-container report-table-container">
             <table class="grid" id="monthlyTable">
               <thead></thead>
               <tbody></tbody>
@@ -567,37 +579,40 @@
         </div>
 
         <!-- Collection Summary Report (Date Range) -->
-        <div class="card" style="margin-top: 2rem;">
-          <header class="modal-header"
-            style="border:none; margin-bottom: 0.5rem; justify-content: flex-start; gap: 1rem; flex-wrap:wrap;">
-            <h3>Collection Summary (Date Range)</h3>
+        <div class="card report-card" style="margin-top: 2rem;">
+          <header class="report-header">
+            <h3>Collection Summary</h3>
 
-            <div class="date-range-container" style="border: 1px solid #10b981;">
-              <div class="date-input-group">
-                <span class="date-label">From:</span>
-                <input type="date" id="summaryStartDate" class="date-input" style="background:transparent; color:#000;">
+            <div class="report-controls">
+              <div class="date-range-container highlight-border">
+                <div class="date-input-group">
+                  <span class="date-label">From:</span>
+                  <input type="date" id="summaryStartDate" class="date-input">
+                </div>
+                <div class="separator-vertical"></div>
+                <div class="date-input-group">
+                  <span class="date-label">To:</span>
+                  <input type="date" id="summaryEndDate" class="date-input">
+                </div>
               </div>
-              <div style="width:1px; height:20px; background:var(--color-border); margin:0 0.5rem;"></div>
-              <div class="date-input-group">
-                <span class="date-label">To:</span>
-                <input type="date" id="summaryEndDate" class="date-input" style="background:transparent; color:#000;">
-              </div>
+
+              <button id="btnGenerateSummary" class="btn-action btn-filter">
+                <i class="fas fa-filter"></i> Filter
+              </button>
             </div>
-
-            <button id="btnGenerateSummary" class="btn-primary">Filter</button>
           </header>
 
-          <div class="table-container">
+          <div class="table-container report-table-container">
             <table class="grid" id="summaryTable">
               <thead>
                 <tr>
-                  <th style="background:#064e3b; color:#fff">Collector Name</th>
-                  <th style="background:#064e3b; color:#fff; text-align:right;">Total Collection</th>
+                  <th class="th-dark">Collector Name</th>
+                  <th class="th-dark text-right">Total Collection</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td colspan="2" style="text-align:center; color:#64748b;">Select dates and click Filter</td>
+                  <td colspan="2" class="empty-state">Select dates and click Filter</td>
                 </tr>
               </tbody>
             </table>

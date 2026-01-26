@@ -655,6 +655,7 @@ function populateMonthlyYear() {
 }
 
 document.getElementById('refreshMonthly')?.addEventListener('click', loadMonthlyReport);
+document.getElementById('monthlyYear')?.addEventListener('change', loadMonthlyReport);
 document.getElementById('exportMonthlyXls')?.addEventListener('click', () => {
   const html = document.getElementById('monthlyTable').outerHTML;
   const blob = new Blob(['\ufeff', html], { type: 'application/vnd.ms-excel' });
@@ -722,15 +723,15 @@ function renderMonthlyTable(data) {
   // Headers
   let thead = `
     <tr>
-      <th style="text-align:left; background:#064e3b; color:#fff">COLLECTOR NAME</th>
-      <th colspan="${colCount}" style="text-align:center; background:#022c22; color:#fff">${currentConfig.title} (${document.getElementById('monthlyYear').value})</th>
-      <th style="background:#064e3b; color:#fff">TOTAL</th>
+      <th style="text-align:left;" class="th-dark">COLLECTOR NAME</th>
+      <th colspan="${colCount}" style="text-align:center;" class="th-dark">${currentConfig.title} (${document.getElementById('monthlyYear').value})</th>
+      <th class="th-dark">TOTAL</th>
     </tr>
     <tr>
-      <th style="background:#047857"></th>`;
+      <th class="th-sub"></th>`;
 
-  currentConfig.headers.forEach(h => thead += `<th style="text-align:right; background:#047857; font-size: 0.8rem; padding: 5px;">${h}</th>`);
-  thead += `<th style="text-align:right; background:#047857"></th></tr>`;
+  currentConfig.headers.forEach(h => thead += `<th style="text-align:right;" class="th-sub">${h}</th>`);
+  thead += `<th style="text-align:right;" class="th-sub"></th></tr>`;
 
   table.querySelector('thead').innerHTML = thead;
   const tbody = table.querySelector('tbody');
@@ -763,9 +764,7 @@ function renderMonthlyTable(data) {
 
   // Footer for Grand Totals
   const trF = document.createElement('tr');
-  trF.style.background = '#064e3b';
-  trF.style.fontWeight = 'bold';
-  trF.style.color = '#fff';
+  trF.classList.add('totals-row');
   let fTds = `<td>GRAND TOTAL</td>`;
   colTotals.forEach(t => fTds += `<td style="text-align:right">${fmt(t)}</td>`);
   fTds += `<td style="text-align:right">${fmt(grandTotal)}</td>`;

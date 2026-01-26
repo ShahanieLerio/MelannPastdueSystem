@@ -436,7 +436,7 @@ section {
   gap: 0.25rem;
   align-items: center;
   background: #ffffff;
-  padding: 0.15rem 0.35rem;
+  padding: 0.15rem 0.2rem;
   border: 1px solid #34d399;
   border-radius: 6px;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -447,7 +447,7 @@ section {
 .date-input-group {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.2rem;
 }
 
 .date-label {
@@ -521,13 +521,17 @@ section {
 #gridSection select.date-input {
   min-width: 0 !important;
   width: auto !important;
-  padding: 0 1.25rem 0 0.25rem !important;
-  font-size: 0.75rem !important;
-  height: 28px !important;
+  padding: 0 0.8rem 0 0.2rem !important;
+  /* Reduced padding-right */
+  font-size: 0.7rem !important;
+  /* Smaller font */
+  height: 24px !important;
+  /* Reduced height */
   border: none !important;
   background-color: transparent !important;
   background-position: right 0 center !important;
-  background-size: 0.7rem !important;
+  background-size: 0.6rem !important;
+  /* Smaller arrow */
 }
 
 .date-label {
@@ -632,6 +636,7 @@ table.grid td {
 }
 
 table.grid th {
+  padding: 1rem 0.6rem;
   background: #f8fafc;
   position: sticky;
   top: 0;
@@ -943,7 +948,7 @@ body.login-page {
 
 .login-form-side {
   flex: 1;
-  padding: 4rem 2rem;
+  padding: 1rem 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -960,7 +965,7 @@ body.login-page {
 }
 
 .input-group {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .input-group label {
@@ -979,7 +984,7 @@ body.login-page {
 
 .input-wrapper input {
   width: 100%;
-  padding: 1.1rem 1.25rem 1.1rem 3.25rem;
+  padding: 0.75rem 2.5rem 0.75rem 2.5rem;
   border: 2px solid var(--color-border);
   border-radius: var(--radius-md);
   font-size: 1rem;
@@ -997,10 +1002,10 @@ body.login-page {
 
 .input-icon {
   position: absolute;
-  left: 1.1rem;
+  left: 0.85rem;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 1.1rem;
+  font-size: 1rem;
   opacity: 0.7;
 }
 
@@ -1009,7 +1014,7 @@ body.login-page {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
   color: white;
   border: none;
-  padding: 1.1rem;
+  padding: 0.85rem;
   border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 800;
@@ -1636,19 +1641,493 @@ table.grid tbody tr {
     transform: translateX(0);
   }
 }
+
 /* Toggle Password Icon */
 .toggle-password {
-    position: absolute;
-    right: 1.25rem;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: var(--color-text-muted);
-    font-size: 1rem;
-    z-index: 10;
-    transition: color 0.2s;
+  position: absolute;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  z-index: 10;
+  transition: color 0.2s;
 }
 
 .toggle-password:hover {
-    color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* --- Signup Mode Overrides --- */
+/* These styles only apply when the 'signup-active' class is present on the login-form-side container */
+
+/* Slightly reduce padding on the container compared to default, but more spacious than before */
+.login-form-side.signup-active {
+  padding: 2rem 2rem !important;
+  justify-content: center !important;
+  padding-top: 1.5rem !important;
+}
+
+/* Compact the header area */
+.signup-active .login-header-new {
+  margin-bottom: 0.75rem !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.signup-active .login-header-new div {
+  font-size: 2.2rem !important;
+  /* Increased from 1.5rem/3rem default */
+  margin-bottom: 0.5rem !important;
+}
+
+.signup-active .login-header-new h2 {
+  font-size: 1.15rem !important;
+  /* Increased from 1rem/1.5rem default */
+  line-height: normal !important;
+}
+
+.signup-active #formTitle {
+  font-size: 1rem !important;
+  /* Standard size */
+}
+
+/* Compact input groups */
+.signup-active .input-group {
+  margin-bottom: 0.75rem !important;
+}
+
+.signup-active .input-group label {
+  font-size: 0.75rem !important;
+  margin-bottom: 0.35rem !important;
+}
+
+/* Compact input fields - Slightly larger padding */
+.signup-active .input-wrapper input,
+.signup-active .input-wrapper select {
+  padding: 0.65rem 0.85rem 0.65rem 2.5rem !important;
+  font-size: 0.9rem !important;
+  height: auto !important;
+  border-width: 1.5px !important;
+}
+
+/* Adjust icons for input spacing */
+.signup-active .input-icon {
+  font-size: 0.95rem !important;
+  left: 0.85rem !important;
+}
+
+/* Password toggle position */
+.signup-active .toggle-password {
+  right: 0.85rem !important;
+  font-size: 0.95rem !important;
+}
+
+/* Button size */
+.signup-active .btn-login {
+  padding: 0.85rem !important;
+  font-size: 1rem !important;
+  margin-top: 0.75rem !important;
+}
+
+/* Toggle Link Text */
+.signup-active #toggleText {
+  margin-top: 1rem !important;
+  font-size: 0.9rem !important;
+}
+
+/* Ensure scroll logic remains */
+.signup-active form {
+  overflow-y: auto;
+  max-height: 100%;
+  scrollbar-width: thin;
+}
+
+.signup-active form::-webkit-scrollbar {
+  width: 4px;
+}
+
+.signup-active form::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.signup-active form::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 4px;
+}
+
+/* --- Enhanced Monthly Report Styles --- */
+.report-card {
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1.5rem;
+  margin-bottom: 0;
+  border-bottom: 2px solid #f1f5f9;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.report-title-group {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.report-title-group h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+}
+
+.report-select {
+  padding: 0.5rem 2.5rem 0.5rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: white;
+  background: #10b981 url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 0.75rem center;
+  background-size: 0.9rem;
+  border: 1px solid #059669;
+  border-radius: 8px;
+  cursor: pointer;
+  min-width: 110px;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+  transition: all 0.2s;
+}
+
+.report-select:hover {
+  background-color: #059669;
+}
+
+.report-controls {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.toggle-group {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #94a3b8;
+  /* Stronger border */
+  background: #ffffff;
+}
+
+.btn-toggle {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  /* Inactive text */
+  cursor: pointer;
+  transition: all 0.2s;
+  border-right: 1px solid #e2e8f0;
+}
+
+.btn-toggle:last-child {
+  border-right: none;
+}
+
+.btn-toggle:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.btn-toggle.active {
+  background: #10b981;
+  /* Primary Green for Active */
+  color: #ffffff;
+  /* White text for contrast */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.action-group {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-action {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.btn-action:hover {
+  background: #e2e8f0;
+  transform: translateY(-1px);
+}
+
+.btn-excel {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+
+.btn-excel:hover {
+  background: #bbf7d0;
+}
+
+.btn-print {
+  background: #e0f2fe;
+  color: #0369a1;
+  border-color: #bae6fd;
+}
+
+.btn-print:hover {
+  background: #bae6fd;
+}
+
+.btn-filter {
+  background: #10b981;
+  color: white;
+  border-color: #059669;
+}
+
+.btn-filter:hover {
+  background: #059669;
+}
+
+.highlight-border {
+  border: 1px solid #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+}
+
+.separator-vertical {
+  width: 1px;
+  height: 24px;
+  background: #e2e8f0;
+  margin: 0 0.75rem;
+}
+
+/* Report Table Specifics */
+/* Report Table Specifics */
+.report-table-container {
+  margin-top: 1.5rem;
+  box-shadow: none;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Header Styling - Modern & Clean */
+#monthlyTable thead tr,
+#summaryTable thead tr {
+  background: #f1f5f9;
+}
+
+#monthlyTable th,
+#summaryTable th {
+  padding: 1rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #000000;
+  /* Pure Black for headers */
+  border-bottom: 2px solid #cbd5e1;
+  background: transparent;
+}
+
+/* Specific Dark Headers for visual anchor - Changed from Dark Slate to Lighter Green */
+.th-dark {
+  background: #10b981 !important;
+  /* Lighter Emerald Green */
+  color: #000000 !important;
+  /* Black text for main headers */
+  border-bottom: none !important;
+}
+
+.th-sub {
+  background: #e2e8f0 !important;
+  /* Very light blue-gray for sub-headers */
+  color: #000000 !important;
+  font-size: 0.8rem;
+  padding: 5px;
+}
+
+/* Row Styling */
+#monthlyTable td,
+#summaryTable td {
+  padding: 0.85rem 1rem;
+  font-size: 0.9rem;
+  color: #000000 !important;
+  /* FORCE PURE BLACK TEXT */
+  border-bottom: 1px solid #e2e8f0;
+  font-weight: 600 !important;
+  /* Semi-bold for better visibility */
+}
+
+#monthlyTable tbody tr:hover,
+#summaryTable tbody tr:hover {
+  background: #f1f5f9 !important;
+}
+
+/* Totals Row - Lighter Green */
+#monthlyTable tr.totals-row td {
+  background: #10b981;
+  /* Matches header */
+  font-weight: 800;
+  color: #000000 !important;
+  /* Black text for totals */
+  border-top: 2px solid #059669;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem !important;
+  color: #94a3b8 !important;
+  font-style: italic;
+}
+
+/* --- Manage Collectors Section Enhancements --- */
+#collectorsSection .card {
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+#collectorsSection .modal-header {
+  background: #ffffff;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#collectorsSection .modal-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+#collectorsSection #addCollectorBtn {
+  background-color: #0f172a;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.1);
+}
+
+#collectorsSection #addCollectorBtn:hover {
+  background-color: #1e293b;
+  transform: translateY(-1px);
+}
+
+#collectorsTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0;
+}
+
+#collectorsTable thead th {
+  background: #f8fafc;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1rem 1.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  text-align: left;
+}
+
+#collectorsTable thead th:last-child {
+  text-align: right;
+  /* Right align Actions header */
+}
+
+#collectorsTable tbody tr {
+  transition: all 0.2s;
+}
+
+#collectorsTable tbody tr:nth-child(even) {
+  background-color: #fcfcfc;
+}
+
+#collectorsTable tbody tr:hover {
+  background-color: #f1f5f9;
+}
+
+#collectorsTable td {
+  padding: 1rem 1.5rem;
+  color: #334155;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+#collectorsTable td:last-child {
+  text-align: right;
+  /* Right align Actions buttons */
+  white-space: nowrap;
+}
+
+/* Action Buttons in Collectors Table */
+#collectorsTable button {
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+  margin-left: 0.5rem;
+}
+
+#collectorsTable .edit-col-btn {
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+}
+
+#collectorsTable .edit-col-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+#collectorsTable .delete-col-btn {
+  background: #fef2f2 !important;
+  /* Override inline span style if necessary */
+  color: #ef4444;
+  border: 1px solid #fecaca;
+}
+
+#collectorsTable .delete-col-btn:hover {
+  background: #fee2e2 !important;
+  color: #dc2626;
+  border-color: #fca5a5;
 }
