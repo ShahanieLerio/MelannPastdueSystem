@@ -35,8 +35,9 @@ async function setupDatabase() {
         console.log('✅ Schema applied successfully!');
 
         // Verify tables
-        const res = await pool.query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'");
-        console.log('Tables created:', res.rows.map(r => r.table_name));
+        const res = await pool.query("SELECT table_schema, table_name FROM information_schema.tables WHERE table_schema NOT IN ('information_schema', 'pg_catalog')");
+        console.log('Tables created:');
+        res.rows.forEach(r => console.log(`- ${r.table_schema}.${r.table_name}`));
 
     } catch (err) {
         console.error('❌ Error setting up database:', err);
