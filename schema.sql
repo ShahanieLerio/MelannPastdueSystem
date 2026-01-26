@@ -4,7 +4,7 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 1. Users (authentication & role management)
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     user_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     username VARCHAR(50) NOT NULL UNIQUE,
     full_name VARCHAR(100) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE users (
 );
 
 -- 2. Collectors (profile linked to a user)
-CREATE TABLE collectors (
+CREATE TABLE IF NOT EXISTS collectors (
     collector_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     name VARCHAR(100) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE collectors (
 );
 
 -- 3. Loans (core transactional data)
-CREATE TABLE loans (
+CREATE TABLE IF NOT EXISTS loans (
     loan_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     loan_code VARCHAR(30) NOT NULL UNIQUE,
     collector_id UUID NOT NULL REFERENCES collectors(collector_id) ON DELETE RESTRICT,
@@ -43,7 +43,7 @@ CREATE TABLE loans (
 );
 
 -- 4. Loan history (audit per field change)
-CREATE TABLE loan_history (
+CREATE TABLE IF NOT EXISTS loan_history (
     history_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     loan_id UUID NOT NULL REFERENCES loans(loan_id) ON DELETE CASCADE,
     changed_by UUID NOT NULL REFERENCES users(user_id),
@@ -54,7 +54,7 @@ CREATE TABLE loan_history (
 );
 
 -- 5. General audit log (actions other than field changes)
-CREATE TABLE audit_log (
+CREATE TABLE IF NOT EXISTS audit_log (
     audit_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES users(user_id),
     action VARCHAR(100) NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE audit_log (
 );
 
 -- 6. Remarks (comments on loan records)
-CREATE TABLE loan_remarks (
+CREATE TABLE IF NOT EXISTS loan_remarks (
     remark_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     loan_id UUID NOT NULL REFERENCES loans(loan_id) ON DELETE CASCADE,
     user_id UUID NOT NULL REFERENCES users(user_id),
@@ -74,11 +74,11 @@ CREATE TABLE loan_remarks (
 );
 
 -- Indexes for fast filtering
-CREATE INDEX idx_loans_collector ON loans(collector_id);
-CREATE INDEX idx_loans_due_date ON loans(due_date);
-CREATE INDEX idx_loans_moving_status ON loans(moving_status);
-CREATE INDEX idx_loans_location_status ON loans(location_status);
-CREATE INDEX idx_loans_month_reported ON loans(month_reported);
+CREATE INDEX IF NOT EXISTS idx_loans_collector ON loans(collector_id);
+CREATE INDEX IF NOT EXISTS idx_loans_due_date ON loans(due_date);
+CREATE INDEX IF NOT EXISTS idx_loans_moving_status ON loans(moving_status);
+CREATE INDEX IF NOT EXISTS idx_loans_location_status ON loans(location_status);
+CREATE INDEX IF NOT EXISTS idx_loans_month_reported ON loans(month_reported);
 
 -- Trigger: auto‑set Paid status when running_balance reaches zero
 CREATE OR REPLACE FUNCTION trg_set_paid_status()
@@ -91,6 +91,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trg_paid_after_update ON loans;
 CREATE TRIGGER trg_paid_after_update
 AFTER UPDATE OF amount_collected, outstanding_balance ON loans
 FOR EACH ROW EXECUTE FUNCTION trg_set_paid_status();
@@ -115,11 +116,13 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trg_audit_loan_changes ON loans;
 CREATE TRIGGER trg_audit_loan_changes
 AFTER UPDATE ON loans
 FOR EACH ROW EXECUTE FUNCTION trg_loan_audit();
 
 -- Materialized view for nightly summary (used by reports)
+DROP MATERIALIZED VIEW IF EXISTS loan_summary;
 CREATE MATERIALIZED VIEW loan_summary AS
 SELECT
     collector_id,
