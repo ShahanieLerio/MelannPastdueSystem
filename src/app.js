@@ -1,6 +1,7 @@
 // src/app.js
 require('dotenv').config();
 // Trigger restart
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const loanRoutes = require('./routes/loans');
@@ -30,7 +31,7 @@ app.use('/api/export', verifyToken, exportRoutes);
 app.use('/api/reports', verifyToken, require('./routes/reports'));
 
 // Serve static frontend files from 'client' folder
-app.use(express.static('client'));
+app.use(express.static(path.join(__dirname, '../client')));
 
 app.use((err, req, res, next) => {
   console.error(err);
