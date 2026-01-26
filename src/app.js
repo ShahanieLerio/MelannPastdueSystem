@@ -23,6 +23,18 @@ app.use((req, res, next) => {
 
 // Public routes
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+
+// Explicitly serve index.html for root route
+app.get('/', (req, res) => {
+  const indexPath = path.join(__dirname, '../client/index.html');
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      console.error('Error serving index.html:', err);
+      res.status(500).send('Error loading frontend');
+    }
+  });
+});
+
 app.use('/api/auth', authRoutes); // login endpoint – no JWT required
 
 // Protected routes – require JWT and set user context for audit
