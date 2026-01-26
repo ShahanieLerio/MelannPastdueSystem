@@ -144,16 +144,145 @@ function updateDashboard(loans) {
   const totalCollected = loans.reduce((sum, l) => sum + Number(l.amount_collected), 0);
   const totalRunning = loans.reduce((sum, l) => sum + Number(l.running_balance), 0);
   const paidCount = loans.filter(l => l.moving_status === 'Paid').length;
-  const nmCount = loans.filter(l => l.moving_status === 'NM' || l.moving_status === 'NMSR').length;
+  const nmCount = loans.filter(l => l.moving_status === 'NM').length;
+  const movingCount = loans.filter(l => l.moving_status === 'Moving').length;
+  const nmsrCount = loans.filter(l => l.moving_status === 'NMSR').length;
 
   const fmt = (num) => `₱${Number(num).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-  document.getElementById('statTotalAccounts').textContent = totalAccounts;
-  document.getElementById('statOutstanding').textContent = fmt(totalOutstanding);
-  document.getElementById('statCollected').textContent = fmt(totalCollected);
-  document.getElementById('statRunning').textContent = fmt(totalRunning);
-  document.getElementById('statPaidCount').textContent = paidCount;
-  document.getElementById('statNMCount').textContent = nmCount;
+  // Update Stats Cards
+  const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  setTxt('statTotalAccounts', totalAccounts);
+  setTxt('statOutstanding', fmt(totalOutstanding));
+  setTxt('statCollected', fmt(totalCollected));
+  setTxt('statRunning', fmt(totalRunning));
+  setTxt('statPaidCount', paidCount);
+  setTxt('statNMCount', nmCount);
+  setTxt('statMovingCount', movingCount); // Added
+  setTxt('statNMSRCount', nmsrCount);     // Added
+
+  // Render Charts & Insights
+  renderDashboardCharts(loans);
+  computeQuickInsights(loans);
+
+  // Update Date Context
+  const dateEl = document.getElementById('dashDateContext');
+  if (dateEl) dateEl.textContent = new Date().toLocaleDateString();
+}
+
+let dashPerfChartInstance = null;
+let dashStatusChartInstance = null;
+
+function renderDashboardCharts(loans) {
+  // 1. Collector Performance (Bar Chart)
+  const collectors = {};
+  loans.forEach(l => {
+    const c = l.collector_name || 'Unassigned';
+    if (!collectors[c]) collectors[c] = { collected: 0, reported: 0 };
+    collectors[c].collected += Number(l.amount_collected);
+    collectors[c].reported += Number(l.outstanding_balance); // 'Reported' usually means outstanding/beginning for that period, typically. Actually user UI says "Reported vs Collected". Let's use Outstanding as Reported here or create a derived metric if needed. Assuming 'outstanding_balance' is the target.
+  });
+
+  const labels = Object.keys(collectors);
+  const dataCollected = labels.map(c => collectors[c].collected);
+  const dataReported = labels.map(c => collectors[c].reported);
+
+  const perfCtx = document.getElementById('dashPerfChart');
+  if (perfCtx) {
+    if (dashPerfChartInstance) dashPerfChartInstance.destroy();
+    dashPerfChartInstance = new Chart(perfCtx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Collected',
+            data: dataCollected,
+            backgroundColor: '#10b981',
+            borderRadius: 4
+          },
+          {
+            label: 'Outstanding',
+            data: dataReported,
+            backgroundColor: '#ef4444',
+            borderRadius: 4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom' }
+        },
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  }
+
+  // 2. Account Distribution (Pie Chart)
+  const statusCounts = { 'Paid': 0, 'Moving': 0, 'NM': 0, 'NMSR': 0 };
+  loans.forEach(l => {
+    const s = l.moving_status;
+    if (statusCounts[s] !== undefined) statusCounts[s]++;
+    else statusCounts['Other'] = (statusCounts['Other'] || 0) + 1;
+  });
+
+  const statusCtx = document.getElementById('dashStatusChart');
+  if (statusCtx) {
+    if (dashStatusChartInstance) dashStatusChartInstance.destroy();
+    dashStatusChartInstance = new Chart(statusCtx, {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(statusCounts),
+        datasets: [{
+          data: Object.values(statusCounts),
+          backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#1e293b', '#cbd5e1'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right' }
+        }
+      }
+    });
+  }
+}
+
+function computeQuickInsights(loans) {
+  // 1. Top Performing Collector
+  const collectors = {};
+  loans.forEach(l => {
+    const c = l.collector_name || 'Unassigned';
+    if (!collectors[c]) collectors[c] = 0;
+    collectors[c] += Number(l.amount_collected);
+  });
+
+  let topCol = 'None';
+  let maxVal = -1;
+  Object.entries(collectors).forEach(([name, val]) => {
+    if (val > maxVal) { maxVal = val; topCol = name; }
+  });
+
+  const topColEl = document.getElementById('insightTopCollector');
+  if (topColEl) topColEl.textContent = topCol === 'None' ? '—' : topCol;
+
+  // 2. Highest Outstanding (Client)
+  // Find loan with max running_balance
+  let maxBal = -1;
+  let maxClient = 'None';
+  loans.forEach(l => {
+    const bal = Number(l.running_balance);
+    if (bal > maxBal) { maxBal = bal; maxClient = l.borrower_name; }
+  });
+
+  const highOutEl = document.getElementById('insightHighOutstanding');
+  if (highOutEl) highOutEl.textContent = maxClient === 'None' ? '—' : maxClient;
 }
 
 function renderGrid(loans) {
@@ -263,6 +392,16 @@ function renderGrid(loans) {
       pmtsBtn.style.marginRight = '5px';
       pmtsBtn.onclick = () => showPaymentHistory(loan);
       actionTd.appendChild(pmtsBtn);
+
+      // Remarks Button
+      const remBtn = document.createElement('button');
+      remBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" style="fill:currentColor"><path d="M512 240c0 114.9-114.6 208-256 208c-37.1 0-72.3-6.4-104.1-17.9c-11.9 8.7-31.3 20.6-54.3 30.6C73.6 471.1 44.7 480 28 480c-6.5 0-12.3-3.9-14.8-9.9c-2.5-6-1.1-12.8 3.4-17.4c0 0 0 0 0 0s0 0 0 0 0 0c17.7-17.7 43.3-48 62.7-76C25.5 345.1 0 294.3 0 240C0 125.1 114.6 32 256 32s256 93.1 256 208z"/></svg>'; // COMMENT
+      remBtn.className = 'history-btn';
+      remBtn.title = 'View/Add Remarks';
+      remBtn.style.marginRight = '5px';
+      remBtn.style.color = '#8b5cf6';
+      remBtn.onclick = () => openRemarksModal(loan);
+      actionTd.appendChild(remBtn);
 
       if (userInfo.role === 'admin' || userInfo.role === 'supervisor') {
         const editBtn = document.createElement('button');
@@ -421,6 +560,8 @@ const viewReportsBtn = document.getElementById('viewReports');
 const viewPaymentInputBtn = document.getElementById('viewPaymentInput');
 const viewMonthlyBtn = document.getElementById('viewMonthly');
 const viewCollectorsBtn = document.getElementById('viewCollectors');
+const viewClientUpdatesBtn = document.getElementById('viewClientUpdates');
+const refreshUpdatesBtn = document.getElementById('refreshUpdatesBtn');
 
 const dashboardSection = document.getElementById('dashboardSection');
 const gridSection = document.getElementById('gridSection');
@@ -428,6 +569,7 @@ const reportsSection = document.getElementById('reportsSection');
 const paymentInputSection = document.getElementById('paymentInputSection');
 const monthlyReportSection = document.getElementById('monthlyReportSection');
 const collectorsSection = document.getElementById('collectorsSection');
+const clientUpdatesSection = document.getElementById('clientUpdatesSection');
 const gridFilters = document.querySelector('.grid-filters');
 
 if (viewGridBtn && viewReportsBtn) {
@@ -438,7 +580,7 @@ if (viewGridBtn && viewReportsBtn) {
     // 2. Hide all sections
     const pendingUsersSection = document.getElementById('pendingUsersSection');
     const collectionSheetSection = document.getElementById('collectionSheetSection');
-    [dashboardSection, gridSection, reportsSection, paymentInputSection, monthlyReportSection, collectorsSection, pendingUsersSection, collectionSheetSection].forEach(s => s?.classList.add('hidden'));
+    [dashboardSection, gridSection, reportsSection, paymentInputSection, monthlyReportSection, collectorsSection, pendingUsersSection, collectionSheetSection, clientUpdatesSection].forEach(s => s?.classList.add('hidden'));
 
     // 3. Set active class on parent LI of the clicked button
     if (activeBtn.parentElement && activeBtn.parentElement.classList.contains('nav-item')) {
@@ -532,6 +674,13 @@ if (viewGridBtn && viewReportsBtn) {
     });
   }
 
+  if (viewClientUpdatesBtn) {
+    viewClientUpdatesBtn.addEventListener('click', () => {
+      switchTab(viewClientUpdatesBtn, clientUpdatesSection, 'clientUpdates');
+      if (typeof loadClientUpdates === 'function') loadClientUpdates();
+    });
+  }
+
   // Restore State Logic
   const savedTab = localStorage.getItem('activeTab');
   if (savedTab) {
@@ -543,7 +692,8 @@ if (viewGridBtn && viewReportsBtn) {
       'monthlyReport': viewMonthlyBtn,
       'manageCollectors': viewCollectorsBtn,
       'pendingApprovals': viewPendingUsersBtn,
-      'collectionSheet': viewCollectionSheetBtn
+      'collectionSheet': viewCollectionSheetBtn,
+      'clientUpdates': viewClientUpdatesBtn
     };
 
     const btnToClick = tabMap[savedTab];
@@ -888,6 +1038,17 @@ function renderAging(data) {
 // Payment Input Logic
 const paymentFindBtn = document.getElementById('paymentFindBtn');
 if (paymentFindBtn) {
+  // NEW: Allow Enter key to trigger search
+  const paymentInputCode = document.getElementById('paymentInputCode');
+  if (paymentInputCode) {
+    paymentInputCode.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        paymentFindBtn.click();
+      }
+    });
+  }
+
   paymentFindBtn.addEventListener('click', async () => {
     const code = document.getElementById('paymentInputCode').value.trim();
     const resultDiv = document.getElementById('paymentSearchResult');
@@ -2123,4 +2284,206 @@ async function loadCollectionSummary() {
     console.error(err);
     tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#ef4444;">Error loading data.</td></tr>';
   }
+}
+
+// --- Remarks Logic ---
+
+const remarksModal = document.getElementById('remarksModal');
+if (remarksModal) {
+  document.getElementById('closeRemarksModal').onclick = () => remarksModal.classList.add('hidden');
+}
+
+function openRemarksModal(loan) {
+  if (!remarksModal) return;
+  remarksModal.classList.remove('hidden');
+
+  document.getElementById('remClientName').textContent = loan.borrower_name;
+  document.getElementById('remClientCode').textContent = loan.loan_code;
+  document.getElementById('remLoanId').value = loan.loan_id;
+  document.getElementById('remInput').value = '';
+
+  loadRemarks(loan.loan_id);
+}
+
+async function loadRemarks(loanId) {
+  const list = document.getElementById('remarksList');
+  list.innerHTML = '<div style="padding:1rem; text-align:center; color:#94a3b8;">Loading...</div>';
+
+  try {
+    const resp = await fetch(`${API_BASE}/loans/${loanId}/remarks`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!resp.ok) throw new Error('Failed to fetch remarks');
+    const remarks = await resp.json();
+
+    list.innerHTML = '';
+    if (remarks.length === 0) {
+      list.innerHTML = '<div style="padding:1rem; text-align:center; color:#94a3b8;">No remarks found.</div>';
+      return;
+    }
+
+    remarks.forEach(r => {
+      const div = document.createElement('div');
+      div.style.padding = '0.75rem';
+      div.style.borderBottom = '1px solid #f1f5f9';
+      div.innerHTML = `
+        <div style="font-size:0.85rem; color:#64748b; margin-bottom:0.25rem; display:flex; justify-content:space-between;">
+          <span style="font-weight:600; color:#334155;">${r.author_name || 'System'}</span>
+          <span>${new Date(r.created_at).toLocaleString()}</span>
+        </div>
+        <div style="color:#0f172a; white-space:pre-wrap;">${r.remark}</div>
+      `;
+      list.appendChild(div);
+    });
+  } catch (err) {
+    console.error(err);
+    list.innerHTML = '<div style="padding:1rem; text-align:center; color:#ef4444;">Error loading remarks.</div>';
+  }
+}
+
+const remarksForm = document.getElementById('remarksForm');
+if (remarksForm) {
+  remarksForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const loanId = document.getElementById('remLoanId').value;
+    const remark = document.getElementById('remInput').value;
+    const btn = remarksForm.querySelector('button[type="submit"]');
+
+    if (!remark.trim()) return;
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
+
+    try {
+      const resp = await fetch(`${API_BASE}/loans/${loanId}/remarks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ remark })
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json();
+        throw new Error(err.error || 'Failed to post remark');
+      }
+
+      document.getElementById('remInput').value = '';
+      await loadRemarks(loanId);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Post Remark';
+    }
+  });
+}
+
+// --- Client Updates Logic ---
+
+
+
+if (refreshUpdatesBtn) {
+  refreshUpdatesBtn.addEventListener('click', loadClientUpdates);
+}
+
+// Poll notifications on load and every minute
+document.addEventListener('DOMContentLoaded', () => {
+  checkNotifications();
+  setInterval(checkNotifications, 60000);
+});
+
+async function checkNotifications() {
+  try {
+    const resp = await fetch(`${API_BASE}/reports/notifications`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!resp.ok) return;
+    const data = await resp.json();
+
+    const banner = document.getElementById('notificationsBanner');
+    const badge = document.getElementById('navBadge');
+
+    // Update Counts
+    document.querySelector('#notifFollowUp .count').textContent = data.follow_ups_today;
+    document.querySelector('#notifDue .count').textContent = data.payments_due_today;
+    document.querySelector('#notifPriority .count').textContent = data.top_priority_new;
+
+    // Show banner if any action required
+    const totalUrgent = data.follow_ups_today + data.payments_due_today + data.top_priority_new;
+
+    if (totalUrgent > 0) {
+      if (banner) banner.style.display = 'grid';
+      if (badge) {
+        badge.textContent = totalUrgent;
+        badge.classList.remove('hidden');
+      }
+    } else {
+      if (banner) banner.style.display = 'none';
+      if (badge) badge.classList.add('hidden');
+    }
+
+  } catch (err) {
+    console.warn('Failed to check notifications', err);
+  }
+}
+
+async function loadClientUpdates() {
+  const feed = document.getElementById('updatesFeed');
+  feed.innerHTML = '<div style="padding:2rem; text-align:center; color:#94a3b8;">Loading updates...</div>';
+
+  // Refresh notifications too
+  checkNotifications();
+
+  try {
+    const resp = await fetch(`${API_BASE}/reports/client-updates`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const updates = await resp.json();
+
+    feed.innerHTML = '';
+    if (updates.length === 0) {
+      feed.innerHTML = '<div style="padding:2rem; text-align:center; color:#94a3b8;">No recent updates found.</div>';
+      return;
+    }
+
+    updates.forEach(u => {
+      const clsMap = {
+        'Top Priority': 'top-priority',
+        'Follow-up': 'follow-up',
+        'Monitor Closely': 'monitor',
+        'Lowest Priority': 'lowest'
+      };
+
+      const badgeCls = clsMap[u.priority] || 'lowest';
+
+      const div = document.createElement('div');
+      div.className = `update-card ${badgeCls}`;
+      div.innerHTML = `
+        <div class="update-header">
+           <div style="font-weight:600; color:#1e293b;">
+             ${u.borrower_name} <span style="color:#64748b; font-weight:normal;">(${u.loan_code})</span>
+           </div>
+           <span class="priority-badge ${badgeCls}">${u.priority}</span>
+        </div>
+        <div style="font-size:0.95rem; color:#334155; margin-bottom:0.5rem; white-space:pre-wrap;">${u.remark}</div>
+        <div style="font-size:0.8rem; color:#94a3b8; display:flex; justify-content:space-between; align-items:center;">
+           <span><i class="fas fa-clock"></i> ${new Date(u.created_at).toLocaleString()}</span>
+           <span>Collector: ${u.collector_name || '—'}</span>
+        </div>
+      `;
+      feed.appendChild(div);
+    });
+
+  } catch (err) {
+    feed.innerHTML = '<div style="padding:2rem; text-align:center; color:#ef4444;">Failed to load updates.</div>';
+  }
+}
+
+// FIX: Ensure loadDashboardData is defined
+async function loadDashboardData() {
+  console.log('Loading dashboard data...');
+  // Reuse loadLoans to populate stats
+  await loadLoans();
 }

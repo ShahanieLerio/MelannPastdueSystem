@@ -53,6 +53,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Forgot Password Logic
+    const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+    if (forgotPasswordBtn) {
+        forgotPasswordBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Please contact your system administrator to reset your password.');
+        });
+    }
+
     // Handle Login
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();

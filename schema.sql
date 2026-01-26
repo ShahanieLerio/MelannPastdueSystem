@@ -64,6 +64,15 @@ CREATE TABLE audit_log (
     details TEXT
 );
 
+-- 6. Remarks (comments on loan records)
+CREATE TABLE loan_remarks (
+    remark_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    loan_id UUID NOT NULL REFERENCES loans(loan_id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(user_id),
+    remark TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
 -- Indexes for fast filtering
 CREATE INDEX idx_loans_collector ON loans(collector_id);
 CREATE INDEX idx_loans_due_date ON loans(due_date);

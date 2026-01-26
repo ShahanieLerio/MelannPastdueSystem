@@ -51,4 +51,15 @@ router.post('/:id/payments',
     loanController.addPayment
 );
 
+// Remarks Routes
+router.get('/:id/remarks',
+    checkRole(['admin', 'supervisor', 'collector']),
+    loanController.getRemarks
+);
+
+router.post('/:id/remarks',
+    checkRole(['admin', 'supervisor', 'collector']),
+    loanController.addRemark
+);
+
 module.exports = router;

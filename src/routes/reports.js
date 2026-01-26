@@ -11,4 +11,10 @@ router.get('/masterlist', checkRole(['admin', 'supervisor']), reportController.g
 router.get('/monthly', checkRole(['admin', 'supervisor']), reportController.getMonthlyReport);
 router.get('/collection-summary', checkRole(['admin', 'supervisor']), reportController.getCollectionSummary);
 
+// Cross-controller access
+const loanController = require('../controllers/loanController');
+
+router.get('/client-updates', checkRole(['admin', 'supervisor', 'collector']), loanController.getClientUpdates);
+router.get('/notifications', checkRole(['admin', 'supervisor', 'collector']), loanController.getNotifications);
+
 module.exports = router;

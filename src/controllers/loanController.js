@@ -410,3 +410,157 @@ exports.addPayment = async (req, res, next) => {
         next(err);
     }
 };
+
+/** GET /api/loans/:id/remarks */
+exports.getRemarks = async (req, res, next) => {
+    try {
+        const sql = `
+            SELECT r.*, u.full_name as author_name
+            FROM loan_remarks r
+            JOIN users u ON r.user_id = u.user_id
+            WHERE r.loan_id = $1
+            ORDER BY r.created_at DESC
+        `;
+        const { rows } = await db.query(sql, [req.params.id]);
+        res.json(rows);
+    } catch (err) {
+        next(err);
+    }
+};
+
+// --- AI / Heuristic Classification Logic ---
+function classifyRemark(text) {
+    const lower = text.toLowerCase();
+    let priority = 'Lowest Priority';
+    let followUpDate = null;
+
+    // 1. Text Analysis for Priority
+    if (lower.match(/(urgent|asap|alert|critical|violation|refused|immediately|warning)/)) {
+        priority = 'Top Priority';
+    } else if (lower.match(/(promise|will pay|schedule|commitment|return|saturday|monday|friday)/)) {
+        priority = 'Follow-up';
+    } else if (lower.match(/(try|maybe|waiting|check|partial|monitor|verify)/)) {
+        priority = 'Monitor Closely';
+    }
+
+    // 2. Simple Date Extraction (very basic heuristic)
+    // Matches: "on jan 25", "on 2026-01-25", "next friday" (would need library, skipping natural lang relative dates for simplicity in pure JS without libs)
+    // We will attempt to find YYYY-MM-DD or MM/DD
+    const dateMatch = text.match(/(\d{4}-\d{2}-\d{2})/) || text.match(/(\d{1,2}\/\d{1,2}\/?\d{2,4}?)/);
+    if (dateMatch) {
+        // Validation could be added here
+        try {
+            const d = new Date(dateMatch[0]);
+            if (!isNaN(d.getTime())) {
+                followUpDate = d.toISOString().split('T')[0];
+            }
+        } catch (e) { }
+    }
+
+    // Fallback: if no specific date but "tomorrow"
+    if (!followUpDate && lower.includes('tomorrow')) {
+        const d = new Date();
+        d.setDate(d.getDate() + 1);
+        followUpDate = d.toISOString().split('T')[0];
+    }
+
+    return { priority, followUpDate };
+}
+
+/** POST /api/loans/:id/remarks */
+exports.addRemark = async (req, res, next) => {
+    const { remark } = req.body;
+    if (!remark || !remark.trim()) return res.status(400).json({ error: 'Remark cannot be empty' });
+
+    // AI Classification
+    const { priority, followUpDate } = classifyRemark(remark);
+
+    try {
+        const sql = `
+            INSERT INTO loan_remarks (loan_id, user_id, remark, priority, follow_up_date)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING *
+        `;
+        const { rows } = await db.query(sql, [
+            req.params.id,
+            req.user.userId,
+            remark.trim(),
+            priority,
+            followUpDate
+        ]);
+
+        // Fetch full object with name
+        const newObj = rows[0];
+        const userRes = await db.query('SELECT full_name FROM users WHERE user_id = $1', [req.user.userId]);
+        newObj.author_name = userRes.rows[0].full_name;
+
+        res.status(201).json(newObj);
+    } catch (err) {
+        next(err);
+    }
+};
+
+/** GET /api/reports/client-updates */
+exports.getClientUpdates = async (req, res, next) => {
+    try {
+        // Fetch remarks created recently (e.g., last 30 days) OR are Top Priority/Follow-up
+        // Joined with Loan info for context
+        const sql = `
+            SELECT 
+                r.remark_id, r.remark, r.priority, r.follow_up_date, r.created_at, r.is_read,
+                l.loan_id, l.loan_code, l.borrower_name, l.collector_id,
+                c.name as collector_name
+            FROM loan_remarks r
+            JOIN loans l ON r.loan_id = l.loan_id
+            LEFT JOIN collectors c ON l.collector_id = c.collector_id
+            WHERE 
+                r.created_at > NOW() - INTERVAL '30 days'
+            ORDER BY 
+                CASE 
+                    WHEN r.priority = 'Top Priority' THEN 1
+                    WHEN r.priority = 'Follow-up' THEN 2
+                    WHEN r.priority = 'Monitor Closely' THEN 3
+                    ELSE 4
+                END ASC,
+                r.created_at DESC
+            LIMIT 50
+        `;
+        const { rows } = await db.query(sql);
+        res.json(rows);
+    } catch (err) {
+        next(err);
+    }
+};
+
+/** GET /api/reports/notifications */
+exports.getNotifications = async (req, res, next) => {
+    try {
+        const todayStr = new Date().toISOString().split('T')[0];
+
+        // 1. Follow-ups today (from remarks follow_up_date)
+        const followUpsRes = await db.query(`
+            SELECT COUNT(*) as count FROM loan_remarks 
+            WHERE follow_up_date = $1::date
+        `, [todayStr]);
+
+        // 2. Scheduled due dates today (from loans due_date)
+        const dueTodayRes = await db.query(`
+            SELECT COUNT(*) as count FROM loans 
+            WHERE due_date = $1::date AND running_balance > 0
+        `, [todayStr]);
+
+        // 3. Unread Top Priority Updates (created today)
+        const topPriorityRes = await db.query(`
+            SELECT COUNT(*) as count FROM loan_remarks 
+            WHERE priority = 'Top Priority' AND created_at::date = $1::date
+        `, [todayStr]);
+
+        res.json({
+            follow_ups_today: parseInt(followUpsRes.rows[0].count),
+            payments_due_today: parseInt(dueTodayRes.rows[0].count),
+            top_priority_new: parseInt(topPriorityRes.rows[0].count)
+        });
+    } catch (err) {
+        next(err);
+    }
+};

@@ -50,6 +50,17 @@
         </button>
       </li>
       <li class="nav-item">
+        <button id="viewClientUpdates" style="position:relative;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="margin-right:8px">
+            <path
+              d="M12 22C13.1 22 14 21.1 14 20H10C10 21.1 10.9 22 12 22ZM18 16V11C18 7.93 16.36 5.36 13.5 4.68V4C13.5 3.17 12.83 2.5 12 2.5C11.17 2.5 10.5 3.17 10.5 4V4.68C7.63 5.36 6 7.92 6 11V16L4 18V19H20V18L18 16Z"
+              fill="#F59E0B" />
+          </svg>
+          Clients Update
+          <span id="navBadge" class="nav-badge hidden">0</span>
+        </button>
+      </li>
+      <li class="nav-item">
         <button id="viewReports">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
             style="margin-right:8px">
@@ -120,6 +131,9 @@
           </svg> Pending Approvals
         </button>
       </li>
+
+
+
     </ul>
 
     <div class="sidebar-footer">
@@ -139,12 +153,51 @@
 
     <header class="top-bar">
       <div class="page-title">Dashboard Overview</div>
-      <!-- You could add search or notifications here -->
     </header>
 
     <main id="mainContent">
 
 
+
+      <!-- Clients Update Section -->
+      <div id="clientUpdatesSection" class="hidden">
+
+        <!-- Notifications Banner -->
+        <div id="notificationsBanner" class="notifications-grid" style="display:none; margin-bottom: 2rem;">
+          <div class="notification-card urgent" id="notifFollowUp">
+            <div class="icon"><i class="fas fa-calendar-check"></i></div>
+            <div class="text">
+              <span class="count">0</span>
+              <span class="label">Follow-ups Today</span>
+            </div>
+          </div>
+          <div class="notification-card info" id="notifDue">
+            <div class="icon"><i class="fas fa-clock"></i></div>
+            <div class="text">
+              <span class="count">0</span>
+              <span class="label">Payments Due Today</span>
+            </div>
+          </div>
+          <div class="notification-card warning" id="notifPriority">
+            <div class="icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="text">
+              <span class="count">0</span>
+              <span class="label">New Top Priority</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <header class="modal-header">
+            <h3>Recent Client Updates</h3>
+            <button id="refreshUpdatesBtn" class="btn-primary" style="background:var(--color-primary)">Refresh</button>
+          </header>
+          <div id="updatesFeed" class="updates-feed">
+            <!-- Injected via JS -->
+            <div style="padding:2rem; text-align:center; color:#94a3b8;">Loading updates...</div>
+          </div>
+        </div>
+      </div>
 
       <!-- Dashboard Section (New Feature) -->
       <div id="dashboardSection">
@@ -986,8 +1039,42 @@
       </div>
     </div>
   </div>
+  </div>
 
-  <script src="dashboard-logic.js?v=1"></script>
+  <!-- Remarks Modal -->
+  <div id="remarksModal" class="modal hidden">
+    <div class="modal-content" style="max-width:600px;">
+      <header class="modal-header">
+        <h3 id="remarksTitle">Client Remarks</h3>
+        <button id="closeRemarksModal" class="close-btn">&times;</button>
+      </header>
+
+      <div style="background:#f8fafc; padding:1rem; border-radius:8px; margin-bottom:1rem;">
+        <h4 id="remClientName" style="margin:0 0 0.5rem 0; color:#0f172a;">Client Name</h4>
+        <div style="font-size:0.9rem; color:#64748b;">Code: <span id="remClientCode">---</span></div>
+      </div>
+
+      <div class="remarks-list" id="remarksList"
+        style="max-height:300px; overflow-y:auto; margin-bottom:1rem; border:1px solid #e2e8f0; border-radius:6px; background:white;">
+        <!-- Loaded via JS -->
+      </div>
+
+      <form id="remarksForm">
+        <input type="hidden" id="remLoanId">
+        <div class="form-group">
+          <label style="font-size:0.9rem; font-weight:600; color:#334155;">Add New Remark</label>
+          <textarea id="remInput" rows="3" class="form-input" placeholder="Enter notes here (e.g. Payment promise...)"
+            required
+            style="width:100%; padding:0.75rem; border:1px solid #cbd5e1; border-radius:6px; font-family:inherit;"></textarea>
+        </div>
+        <div style="text-align:right; margin-top:0.5rem;">
+          <button type="submit" class="btn-primary">Post Remark</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="dashboard-logic.js?v=2"></script>
   <!-- Simple Toggle Logic for Sidebar Active State -->
   <script>
     const navItems = document.querySelectorAll('.nav-item');

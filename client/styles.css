@@ -59,23 +59,27 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
   line-height: 1.5;
+  line-height: 1.5;
   height: 100vh;
   overflow: hidden;
-  /* Prevent body scroll, let main scroll */
   display: flex;
 }
 
 /* --- Sidebar --- */
 .sidebar {
   width: var(--sidebar-width);
-  background: var(--color-sidebar);
-  background: linear-gradient(195deg, #1e293b 0%, #0f172a 100%);
+  background: linear-gradient(180deg, #059669 0%, #022c22 100%);
   display: flex;
   flex-direction: column;
   padding: 1rem 1rem;
   transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 100;
   box-shadow: 10px 0 30px rgba(0, 0, 0, 0.25);
+  height: 100vh;
+  overflow: hidden;
+  /* Prevent whole sidebar scroll, only nav-links will scroll */
+  flex-shrink: 0;
+  /* Never shrink the sidebar width */
 }
 
 .brand {
@@ -86,10 +90,12 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   letter-spacing: -0.025em;
   text-transform: uppercase;
   line-height: 1.2;
+  background: transparent;
+  flex-shrink: 0;
 }
 
 .brand-text {
@@ -101,22 +107,25 @@ body {
 .brand-name {
   font-size: 1.1rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #ffffff;
+  /* White text */
+  background: none;
+  /* Remove gradient */
+  -webkit-text-fill-color: initial;
   display: block;
 }
 
 .brand-subtitle {
   font-size: 0.6rem;
   font-weight: 600;
-  color: #94a3b8;
+  color: #ecfdf5;
+  /* Light green-white for subtitle */
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-top: 0.25rem;
   display: block;
 }
+
 
 .brand-logo {
   width: 48px;
@@ -133,13 +142,41 @@ body {
   flex-direction: column;
   gap: 0.75rem;
   flex: 1;
+  overflow-y: auto;
+  /* Allow menu items to scroll */
+  padding-right: 4px;
+  /* Space for scrollbar */
+  margin-right: -4px;
+  /* Align visually */
+  min-height: 0;
+  /* Important for flex child scrolling */
+  padding-bottom: 1rem;
+}
+
+/* Custom scrollbar for nav-links */
+.nav-links::-webkit-scrollbar {
+  width: 4px;
+}
+
+.nav-links::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.nav-links::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.nav-links::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .nav-item {
   padding: 0;
   border-radius: var(--radius-md);
   cursor: pointer;
-  color: var(--color-text-sidebar);
+  color: #d1fae5;
+  /* Light Green Text */
   font-weight: 600;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
@@ -154,9 +191,10 @@ body {
 }
 
 .nav-item.active {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
-  color: white;
-  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .nav-item.active button svg * {
@@ -178,9 +216,16 @@ body {
   gap: 1rem;
 }
 
+/* Ensure brand and footer do not shrink */
+.brand {
+  flex-shrink: 0;
+}
+
 .sidebar-footer {
   padding-top: 1.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+  /* Keeps footer fixed in height */
 }
 
 .user-profile {
@@ -220,9 +265,9 @@ body {
 
 .logout-btn {
   width: 100%;
-  background: transparent;
-  border: 1px solid rgba(255, 100, 100, 0.5);
-  color: #fca5a5;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
   padding: 0.6rem;
   border-radius: 6px;
   cursor: pointer;
@@ -233,9 +278,9 @@ body {
 }
 
 .logout-btn:hover {
-  background: rgba(239, 68, 68, 0.2);
+  background: rgba(255, 255, 255, 0.25);
   color: white;
-  border-color: #ef4444;
+  border-color: #ffffff;
 }
 
 /* --- Main Content --- */
@@ -244,9 +289,13 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  /* Fixed height to match viewport */
   overflow: hidden;
+  /* No global scroll on wrapper */
   position: relative;
   background: var(--color-bg);
+  min-width: 0;
+  /* Crucial for internal scrolling to work properly in flex items */
 }
 
 /* Header */
@@ -274,6 +323,9 @@ header.top-bar {
 main#mainContent {
   flex: 1;
   overflow-y: auto;
+  /* Internal scrolling restored */
+  overflow-x: hidden;
+  /* No horizontal scroll for main view */
   padding: 2rem;
   scroll-behavior: smooth;
   background-attachment: fixed;
@@ -663,6 +715,68 @@ table.grid td {
   line-height: 1.2;
 }
 
+/* --- Frozen Columns for Loan Records Grid --- */
+#loanGrid th:nth-child(1),
+#loanGrid td:nth-child(1) {
+  position: sticky;
+  left: 0;
+  width: 140px;
+  min-width: 140px;
+  max-width: 140px;
+  z-index: 20;
+}
+
+#loanGrid th:nth-child(1) {
+  z-index: 30;
+}
+
+#loanGrid th:nth-child(2),
+#loanGrid td:nth-child(2) {
+  position: sticky;
+  left: 140px;
+  width: 90px;
+  min-width: 90px;
+  max-width: 90px;
+  z-index: 20;
+}
+
+#loanGrid th:nth-child(2) {
+  z-index: 30;
+}
+
+#loanGrid th:nth-child(3),
+#loanGrid td:nth-child(3) {
+  position: sticky;
+  left: 230px;
+  /* 140 + 90 */
+  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
+  z-index: 20;
+  border-right: 2px solid var(--color-border);
+}
+
+#loanGrid th:nth-child(3) {
+  z-index: 30;
+}
+
+/* Ensure opacity and consistent styling for sticky body cells */
+#loanGrid td:nth-child(1),
+#loanGrid td:nth-child(2),
+#loanGrid td:nth-child(3) {
+  background-color: var(--color-surface);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Match hover effect on sticky cells */
+#loanGrid tbody tr:hover td:nth-child(1),
+#loanGrid tbody tr:hover td:nth-child(2),
+#loanGrid tbody tr:hover td:nth-child(3) {
+  background-color: #f1f5f9;
+}
+
 .editable {
   cursor: pointer;
   border-bottom: 1px dashed var(--color-primary);
@@ -897,7 +1011,7 @@ table.grid td {
 
 /* --- Login Page Specifics --- */
 body.login-page {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #064e3b 100%);
+  background: linear-gradient(135deg, #059669 0%, #022c22 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2130,4 +2244,169 @@ table.grid tbody tr {
   background: #fee2e2 !important;
   color: #dc2626;
   border-color: #fca5a5;
+}
+
+/* Update Feed Styles */
+.updates-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.update-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.update-card:hover {
+  background: #fff;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-color: #cbd5e1;
+}
+
+.update-card.top-priority {
+  border-left: 4px solid #ef4444;
+}
+
+.update-card.follow-up {
+  border-left: 4px solid #f59e0b;
+}
+
+.update-card.monitor {
+  border-left: 4px solid #3b82f6;
+}
+
+.update-card.lowest {
+  border-left: 4px solid #cbd5e1;
+}
+
+.update-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.priority-badge {
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.priority-badge.top-priority {
+  background: transparent;
+  color: #dc2626;
+  /* Red */
+  border: 1px solid #fee2e2;
+}
+
+.priority-badge.follow-up {
+  background: transparent;
+  color: #f59e0b;
+  /* Orange */
+  border: 1px solid #fef3c7;
+}
+
+.priority-badge.monitor {
+  background: transparent;
+  color: #2563eb;
+  /* Blue */
+  border: 1px solid #dbeafe;
+}
+
+.priority-badge.lowest {
+  background: transparent;
+  color: #64748b;
+  /* Gray */
+  border: 1px solid #f1f5f9;
+}
+
+.notifications-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.notification-card {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.notification-card.urgent .icon {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.notification-card.warning .icon {
+  background: #fef3c7;
+  color: #f59e0b;
+}
+
+.notification-card.info .icon {
+  background: #dbeafe;
+  color: #3b82f6;
+}
+
+.notification-card .icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.notification-card .count {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.notification-card .label {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.nav-badge {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  background: #ef4444;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+/* Monthly Report Grids: Faded Green Theme */
+table.grid th.th-dark {
+  background-color: #10b981cc !important;
+  /* Faded Green (Emerald with opacity) */
+  color: white !important;
+  border-bottom: 1px solid #059669 !important;
+}
+
+table.grid tr.totals,
+table.grid tr.totals td {
+  background-color: #10b981cc !important;
+  /* Faded Green for footer */
+  color: white !important;
+  font-weight: bold;
 }
